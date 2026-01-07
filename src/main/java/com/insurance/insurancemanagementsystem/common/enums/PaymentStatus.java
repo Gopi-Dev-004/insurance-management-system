@@ -1,9 +1,10 @@
 package com.insurance.insurancemanagementsystem.common.enums;
 
-public enum BodyType {
+public enum PaymentStatus
+{
 
-    SEDAN,
-    SUV,
-    HATCHBACK
+    SUCCESS,
+    FAILED,
+    PENDING
 
 }

@@ -27,34 +27,13 @@ public class Vehicle {
     @Column( name = "registration_number", nullable = false, unique = true,length = 20)
     private String registrationNumber;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manufacturer_id", nullable = false)
     private Manufacturer manufacturer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "model_id", nullable = false)
-    private CarModel model;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "transmission", nullable = false)
-    private Transmission transmission;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "fuel_type", nullable = false)
-    private FuelType fuelType;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "engine_cc_range", nullable = false)
-    private EngineCCRange engineCcRange;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "seating_capacity", nullable = false)
-    private SeatingCapacity seatingCapacity;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "body_type", nullable = false)
-    private BodyType bodyType;
+    @JoinColumn(name = "car_details", nullable = false)
+    private CarDetails carDetails;
 
     @Column(name = "registration_date", nullable = false)
     private LocalDate registrationDate;
@@ -88,12 +67,5 @@ public class Vehicle {
             this.vehicleAge = Period.between(registrationDate, LocalDate.now()).getYears();
         }
     }
-
-
-
-
-
-
-
 
 }

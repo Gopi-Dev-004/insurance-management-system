@@ -1,9 +1,8 @@
 package com.insurance.insurancemanagementsystem.common.enums;
 
-public enum PolicyStatus
-{
+public enum InsuranceStatus {
     ACTIVE,
     EXPIRED,
-    CANCELLED,
-    LAPSED
+    LAPSED,
+    CANCELLED
 }

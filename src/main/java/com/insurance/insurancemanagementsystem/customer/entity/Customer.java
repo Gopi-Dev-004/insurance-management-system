@@ -43,4 +43,6 @@ public class Customer {
 
     private String KycStatus;  // PENDING, VERIFIED, REJECTED
 
+
+
 }

@@ -1,6 +1,8 @@
 package com.insurance.insurancemanagementsystem.common.enums;
 
-public enum Transmission {
+public enum Transmission
+{
 
-    MANUAL, AUTOMATIC
+    MANUAL,
+    AUTOMATIC
 }

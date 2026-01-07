@@ -1,7 +1,7 @@
 package com.insurance.insurancemanagementsystem.vehicle.entity;
 
 
-import com.insurance.insurancemanagementsystem.common.enums.BodyType;
+import com.insurance.insurancemanagementsystem.common.enums.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +32,16 @@ public class CarModel {
     @Column(name = "body_type", nullable = false)
     private BodyType bodyType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "engine_cc_range", nullable = false)
+    private EngineCCRange engineCcRange;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "seating_capacity", nullable = false)
+    private SeatingCapacity seatingCapacity;
+
     @Column(name = "active", nullable = false)
     private Boolean active = true;
+
+
 }

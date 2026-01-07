@@ -1,7 +1,10 @@
 package com.insurance.insurancemanagementsystem.common.enums;
 
-public enum Role {
-    ADMIN,
-    EMPLOYEE,
-    CUSTOMER
+public enum PaymentMethod
+{
+
+    UPI,
+    CARD,
+    NET_BANKING
 }
+

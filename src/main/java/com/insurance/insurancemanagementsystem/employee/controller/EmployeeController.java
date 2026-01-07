@@ -1,9 +1,9 @@
-package com.insurance.insurancemanagementsystem.payment.controller;
+package com.insurance.insurancemanagementsystem.employee.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-public class PaymentController {
+public class EmployeeController {
 }
