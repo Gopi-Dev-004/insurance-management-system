@@ -64,7 +64,7 @@ public class Claim {
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
-        this.claimStatus = ClaimStatus.CLAIM_REQUESTED;
+        this.claimStatus = ClaimStatus.SUBMITTED;
     }
 }
 
