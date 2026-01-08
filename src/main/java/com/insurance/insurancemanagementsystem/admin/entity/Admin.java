@@ -39,6 +39,4 @@ public class Admin{
 
     private LocalDate doj;
 
-
-
 }
