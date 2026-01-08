@@ -24,9 +24,6 @@ public class CarDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String registrationNumber;
-    private LocalDate registrationDate;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "transmission", nullable = false)
     private Transmission transmission;
