@@ -1,8 +1,8 @@
 package com.insurance.insurancemanagementsystem.vehicle.service.serviceImplementation;
 
+import ch.qos.logback.core.model.Model;
 import com.insurance.insurancemanagementsystem.common.exception.ResourceNotFoundException;
-import com.insurance.insurancemanagementsystem.vehicle.dto.CarDetailsRequestDTO;
-import com.insurance.insurancemanagementsystem.vehicle.dto.CarModelRequestDTO;
+import com.insurance.insurancemanagementsystem.vehicle.dto.*;
 import com.insurance.insurancemanagementsystem.vehicle.entity.CarDetails;
 import com.insurance.insurancemanagementsystem.vehicle.entity.CarModel;
 import com.insurance.insurancemanagementsystem.vehicle.entity.Manufacturer;
@@ -11,7 +11,12 @@ import com.insurance.insurancemanagementsystem.vehicle.repository.CarManufacture
 import com.insurance.insurancemanagementsystem.vehicle.repository.CarModelRepository;
 import com.insurance.insurancemanagementsystem.vehicle.service.CarCRUDServiceInterface;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -75,5 +80,72 @@ public class CarCRUDService implements CarCRUDServiceInterface {
         if (carDetails != null)
             return "CarDetails added successfully...";
         return "Something wrong...!";
+    }
+
+    @Override
+    public Page<ManufacturerResponseDTO> getManufacturers(int pageNumber) {
+
+        Pageable pageable = PageRequest.of(pageNumber,5);
+
+        Page<Manufacturer> manufacturers = manRef.getManufacturers(pageable);
+
+      return  manufacturers.map(this::manufacturerMap);
+
+    }
+
+    @Override
+    public Page<CarModelsResponseDTO> getCarModels(Long manufacturerId, int pageNumber) {
+      Manufacturer manufacturer =  manRef.findById(manufacturerId).orElseThrow(
+              ()-> new ResourceNotFoundException("Manufacturer not found...!"));
+
+        Pageable pageable = PageRequest.of(pageNumber,5);
+
+       Page<CarModel> carModel = carModelRep.getCarModels(manufacturer,pageable);
+
+       return carModel.map(this::carModelMap);
+
+    }
+
+    @Override
+    public Page<CarDetailsResponseDTO> getCarDetails(Long modelId, int pageNumber) {
+
+        CarModel carModel = carModelRep.findById(modelId).orElseThrow(()-> new ResourceNotFoundException("Car model not foud..."));
+
+
+        Pageable pageable = PageRequest.of(pageNumber,5);
+
+        Page<CarDetails>carDetails1 = carDetailsRep.getCarDetails(carModel,pageable);
+
+        return carDetails1.map(this::carDetailsMap);
+    }
+
+
+    private ManufacturerResponseDTO manufacturerMap(Manufacturer manufacturer){
+
+        ManufacturerResponseDTO dto = new ManufacturerResponseDTO();
+        dto.setManufacturer_id(manufacturer.getId());
+        dto.setManufacturer_name(manufacturer.getName());
+        return dto;
+
+    }
+
+    private CarModelsResponseDTO carModelMap(CarModel carModel){
+
+        CarModelsResponseDTO dto = new CarModelsResponseDTO();
+
+        dto.setModel_id(carModel.getId());
+        dto.setModel_name(carModel.getName());
+
+    return dto;
+    }
+
+    private CarDetailsResponseDTO carDetailsMap(CarDetails carDetails){
+        CarDetailsResponseDTO dto = new CarDetailsResponseDTO();
+
+        dto.setId(carDetails.getId());
+        dto.setTransmission(carDetails.getTransmission());
+        dto.setFuelType(carDetails.getFuelType());
+
+      return dto;
     }
 }
