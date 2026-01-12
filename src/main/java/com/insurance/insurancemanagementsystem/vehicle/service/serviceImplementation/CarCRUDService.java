@@ -19,6 +19,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
+
+import static com.insurance.insurancemanagementsystem.common.util.PolicyUtil.calculateCarAge;
 
 @Service
 @AllArgsConstructor
@@ -150,10 +153,17 @@ public class CarCRUDService implements CarCRUDServiceInterface {
 
       return dto;
     }
-    public Long SaveVehicle(CarDetails carDetails){
+    public Long SaveVehicle(CreateVehicleDTO createVehicleDTO){
         Vehicle vehicle=new Vehicle();
-
-
+        vehicle.setVehicleAge(calculateCarAge(createVehicleDTO.getRegistrationDate()));
+         vehicle.setManufacturer( createVehicleDTO.getCarDetails().getManufacturer());
+         vehicle.setCarDetails(createVehicleDTO.getCarDetails());
+         vehicle.setIdvValue(createVehicleDTO.getIdvValue());
+         vehicle.setRegistrationDate(createVehicleDTO.getRegistrationDate());
+         vehicle.setRegistrationNumber(generateAccountNumber());
         return null;
+    }
+    private String generateAccountNumber() {
+        return String.valueOf(Math.abs(UUID.randomUUID().getMostSignificantBits())).substring(0, 10);
     }
 }
