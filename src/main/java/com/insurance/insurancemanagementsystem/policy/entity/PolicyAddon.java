@@ -34,6 +34,4 @@ public class PolicyAddon {
 
     @Column(name = "addon_premium", updatable = false)
     private BigDecimal addonPremium;
-
-
 }
