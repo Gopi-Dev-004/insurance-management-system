@@ -43,10 +43,7 @@ public class Employee {
     public void SetDate(){
       this.doj=LocalDate.now();
     }
-    @PreUpdate
-    public void SetDateUpdate(){
-      this.doj=LocalDate.now();
-    }
+
 
 
 }
