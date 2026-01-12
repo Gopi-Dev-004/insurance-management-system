@@ -1,11 +1,12 @@
 package com.insurance.insurancemanagementsystem.vehicle.controller;
 
-import com.insurance.insurancemanagementsystem.vehicle.dto.CarDetailsRequestDTO;
-import com.insurance.insurancemanagementsystem.vehicle.dto.CarModelRequestDTO;
+import com.insurance.insurancemanagementsystem.vehicle.dto.*;
 import com.insurance.insurancemanagementsystem.vehicle.service.CarCRUDServiceInterface;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,34 @@ public class CarCRUDController {
         String result = carRef.addCarDetails(dto);
         return ResponseEntity.ok(result);
     }
+
+    //get manufacturer
+
+    @GetMapping("/get/manufacturers/{pageNumber}")
+    public ResponseEntity<Page<ManufacturerResponseDTO>> getManufacturers(@PathVariable int pageNumber){
+        return ResponseEntity.ok(carRef.getManufacturers(pageNumber));
+    }
+
+    //get manufacturer models
+
+    @GetMapping("/get/models/{manufacturer_id}/{pageNumber}")
+    public ResponseEntity<Page<CarModelsResponseDTO>> getCarModels(
+            @PathVariable Long manufacturer_id, @PathVariable int pageNumber){
+
+        return ResponseEntity.ok(carRef.getCarModels(manufacturer_id,pageNumber));
+    }
+
+    //get car model details
+
+    @GetMapping("/get/models_details/{model_id}/{pageNumber}")
+    private ResponseEntity<Page<CarDetailsResponseDTO>> getCarDetails(
+            @PathVariable Long model_id , @PathVariable int pageNumber
+    ){
+        return ResponseEntity.ok(carRef.getCarDetails(model_id,pageNumber));
+
+    }
+
+
 
 }
 

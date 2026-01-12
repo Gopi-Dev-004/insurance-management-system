@@ -28,7 +28,4 @@ public class Addon {
 
     @Column(name = "active", nullable = false)
     private Boolean active = true;
-
-
-
 }
