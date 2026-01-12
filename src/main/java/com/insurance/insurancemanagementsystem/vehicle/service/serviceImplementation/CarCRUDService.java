@@ -1,6 +1,5 @@
 package com.insurance.insurancemanagementsystem.vehicle.service.serviceImplementation;
 
-import ch.qos.logback.core.model.Model;
 import com.insurance.insurancemanagementsystem.common.exception.ResourceNotFoundException;
 import com.insurance.insurancemanagementsystem.vehicle.dto.*;
 import com.insurance.insurancemanagementsystem.vehicle.entity.CarDetails;
@@ -18,7 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static com.insurance.insurancemanagementsystem.common.util.PolicyUtil.calculateCarAge;
@@ -91,41 +91,41 @@ public class CarCRUDService implements CarCRUDServiceInterface {
     @Override
     public Page<ManufacturerResponseDTO> getManufacturers(int pageNumber) {
 
-        Pageable pageable = PageRequest.of(pageNumber,5);
+        Pageable pageable = PageRequest.of(pageNumber, 5);
 
         Page<Manufacturer> manufacturers = manRef.getManufacturers(pageable);
 
-      return  manufacturers.map(this::manufacturerMap);
+        return manufacturers.map(this::manufacturerMap);
 
     }
 
     @Override
     public Page<CarModelsResponseDTO> getCarModels(Long manufacturerId, int pageNumber) {
-      Manufacturer manufacturer =  manRef.findById(manufacturerId).orElseThrow(
-              ()-> new ResourceNotFoundException("Manufacturer not found...!"));
+        Manufacturer manufacturer = manRef.findById(manufacturerId).orElseThrow(
+                () -> new ResourceNotFoundException("Manufacturer not found...!"));
 
-        Pageable pageable = PageRequest.of(pageNumber,5);
+        Pageable pageable = PageRequest.of(pageNumber, 5);
 
-       Page<CarModel> carModel = carModelRep.getCarModels(manufacturer,pageable);
+        Page<CarModel> carModel = carModelRep.getCarModels(manufacturer, pageable);
 
-       return carModel.map(this::carModelMap);
+        return carModel.map(this::carModelMap);
 
     }
 
     @Override
     public Page<CarDetailsResponseDTO> getCarDetails(Long modelId, int pageNumber) {
 
-        CarModel carModel = carModelRep.findById(modelId).orElseThrow(()-> new ResourceNotFoundException("Car model not foud..."));
+        CarModel carModel = carModelRep.findById(modelId).orElseThrow(() -> new ResourceNotFoundException("Car model not foud..."));
 
 
-        Pageable pageable = PageRequest.of(pageNumber,5);
+        Pageable pageable = PageRequest.of(pageNumber, 5);
 
-        Page<CarDetails>carDetails1 = carDetailsRep.getCarDetails(carModel,pageable);
+        Page<CarDetails> carDetails1 = carDetailsRep.getCarDetails(carModel, pageable);
 
         return carDetails1.map(this::carDetailsMap);
     }
 
-    private ManufacturerResponseDTO manufacturerMap(Manufacturer manufacturer){
+    private ManufacturerResponseDTO manufacturerMap(Manufacturer manufacturer) {
 
         ManufacturerResponseDTO dto = new ManufacturerResponseDTO();
         dto.setManufacturer_id(manufacturer.getId());
@@ -134,36 +134,43 @@ public class CarCRUDService implements CarCRUDServiceInterface {
 
     }
 
-    private CarModelsResponseDTO carModelMap(CarModel carModel){
+    private CarModelsResponseDTO carModelMap(CarModel carModel) {
 
         CarModelsResponseDTO dto = new CarModelsResponseDTO();
 
         dto.setModel_id(carModel.getId());
         dto.setModel_name(carModel.getName());
 
-    return dto;
+        return dto;
     }
 
-    private CarDetailsResponseDTO carDetailsMap(CarDetails carDetails){
+    private CarDetailsResponseDTO carDetailsMap(CarDetails carDetails) {
         CarDetailsResponseDTO dto = new CarDetailsResponseDTO();
 
         dto.setId(carDetails.getId());
         dto.setTransmission(carDetails.getTransmission());
         dto.setFuelType(carDetails.getFuelType());
 
-      return dto;
+
+        return dto;
     }
-    public Long SaveVehicle(CreateVehicleDTO createVehicleDTO){
-        Vehicle vehicle=new Vehicle();
-        vehicle.setVehicleAge(calculateCarAge(createVehicleDTO.getRegistrationDate()));
-         vehicle.setManufacturer( createVehicleDTO.getCarDetails().getManufacturer());
-         vehicle.setCarDetails(createVehicleDTO.getCarDetails());
-         vehicle.setIdvValue(createVehicleDTO.getIdvValue());
-         vehicle.setRegistrationDate(createVehicleDTO.getRegistrationDate());
-         vehicle.setRegistrationNumber(generateAccountNumber());
-        return null;
+
+    public Vehicle saveVehicle(CarDetails carDetails, String carRegisterNumber, LocalDate vehicleRegistrationDate, int carAge, BigDecimal idv) {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setRegistrationNumber(carRegisterNumber);
+        vehicle.setVehicleAge(carAge);
+        vehicle.setManufacturer(carDetails.getManufacturer());
+        vehicle.setCarDetails(carDetails);
+        vehicle.setIdvValue(idv);
+        vehicle.setRegistrationDate(vehicleRegistrationDate);
+        vehicle.setRegistrationNumber(generateRegisterNumber());
+
+        Vehicle newVehicle = vehicleRepository.save(vehicle);
+
+        return newVehicle;
     }
-    private String generateAccountNumber() {
+
+    private String generateRegisterNumber() {
         return String.valueOf(Math.abs(UUID.randomUUID().getMostSignificantBits())).substring(0, 10);
     }
 }
