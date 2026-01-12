@@ -38,7 +38,13 @@ public class Employee {
     private ClaimSpecialization specialization;
 
     @Column(name = "active_claim_count")
-    private Integer activeClaimCount = 0;
+    private Integer activeClaimCount=0;
+    @PrePersist
+    public void SetDate(){
+      this.doj=LocalDate.now();
+    }
+
+
 
 }
 

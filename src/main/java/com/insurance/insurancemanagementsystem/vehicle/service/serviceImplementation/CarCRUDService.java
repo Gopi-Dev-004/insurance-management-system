@@ -6,9 +6,11 @@ import com.insurance.insurancemanagementsystem.vehicle.dto.*;
 import com.insurance.insurancemanagementsystem.vehicle.entity.CarDetails;
 import com.insurance.insurancemanagementsystem.vehicle.entity.CarModel;
 import com.insurance.insurancemanagementsystem.vehicle.entity.Manufacturer;
+import com.insurance.insurancemanagementsystem.vehicle.entity.Vehicle;
 import com.insurance.insurancemanagementsystem.vehicle.repository.CarDetailsRepository;
 import com.insurance.insurancemanagementsystem.vehicle.repository.CarManufacturerRepository;
 import com.insurance.insurancemanagementsystem.vehicle.repository.CarModelRepository;
+import com.insurance.insurancemanagementsystem.vehicle.repository.VehicleRepository;
 import com.insurance.insurancemanagementsystem.vehicle.service.CarCRUDServiceInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
+
+import static com.insurance.insurancemanagementsystem.common.util.PolicyUtil.calculateCarAge;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +30,7 @@ public class CarCRUDService implements CarCRUDServiceInterface {
     private final CarManufacturerRepository manRef;
     private final CarModelRepository carModelRep;
     private final CarDetailsRepository carDetailsRep;
+    private VehicleRepository vehicleRepository;
 
     @Override
     public String addManufacturer(String manufacturerName) {
@@ -146,5 +152,18 @@ public class CarCRUDService implements CarCRUDServiceInterface {
         dto.setFuelType(carDetails.getFuelType());
 
       return dto;
+    }
+    public Long SaveVehicle(CreateVehicleDTO createVehicleDTO){
+        Vehicle vehicle=new Vehicle();
+        vehicle.setVehicleAge(calculateCarAge(createVehicleDTO.getRegistrationDate()));
+         vehicle.setManufacturer( createVehicleDTO.getCarDetails().getManufacturer());
+         vehicle.setCarDetails(createVehicleDTO.getCarDetails());
+         vehicle.setIdvValue(createVehicleDTO.getIdvValue());
+         vehicle.setRegistrationDate(createVehicleDTO.getRegistrationDate());
+         vehicle.setRegistrationNumber(generateAccountNumber());
+        return null;
+    }
+    private String generateAccountNumber() {
+        return String.valueOf(Math.abs(UUID.randomUUID().getMostSignificantBits())).substring(0, 10);
     }
 }

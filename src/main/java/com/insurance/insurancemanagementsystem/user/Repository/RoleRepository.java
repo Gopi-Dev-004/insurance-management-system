@@ -1,12 +1,12 @@
 package com.insurance.insurancemanagementsystem.user.Repository;
 
-import com.insurance.insurancemanagementsystem.user.entity.User;
+import com.insurance.insurancemanagementsystem.user.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Long> {
-    Optional<User> findByUsername(String Username);
+public interface RoleRepository extends JpaRepository<Role,Long> {
+    Optional<Role> findByRoleName(String roleName);
 }

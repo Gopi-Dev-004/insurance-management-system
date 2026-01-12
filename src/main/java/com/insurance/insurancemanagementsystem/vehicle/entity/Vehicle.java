@@ -53,19 +53,14 @@ public class Vehicle {
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
-        calculateVehicleAge();
     }
 
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
-        calculateVehicleAge();
+
     }
 
-    private void calculateVehicleAge() {
-        if (registrationDate != null) {
-            this.vehicleAge = Period.between(registrationDate, LocalDate.now()).getYears();
-        }
-    }
+
 
 }
