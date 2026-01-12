@@ -51,7 +51,7 @@ public class Policy {
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "policy_status", nullable = false)
+    @Column(name = "policy_status", nullable = false,length = 30)
     private PolicyStatus policyStatus;
 
     @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL)

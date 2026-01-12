@@ -1,6 +1,7 @@
 package com.insurance.insurancemanagementsystem.policy.controller;
 
 import com.insurance.insurancemanagementsystem.policy.dto.PolicyPremiumCalculationResponseDTO;
+import com.insurance.insurancemanagementsystem.policy.dto.ThirdPartyQuoteResponseDTO;
 import com.insurance.insurancemanagementsystem.policy.service.PolicyServiceInterface;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -20,9 +21,9 @@ public class PolicyController {
     public final PolicyServiceInterface policyService;
 
     @GetMapping("/payableAmout")
-    public ResponseEntity<BigDecimal> getPayableAmount(@Valid @RequestBody PolicyPremiumCalculationResponseDTO dto){
+    public ResponseEntity<ThirdPartyQuoteResponseDTO> getPayableAmount(@Valid @RequestBody PolicyPremiumCalculationResponseDTO dto){
 
-        return ResponseEntity.ok( policyService.getPayableAmount(dto));
+        return ResponseEntity.ok(policyService.getPayableAmount(dto));
 
     }
 
