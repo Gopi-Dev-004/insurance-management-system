@@ -9,11 +9,9 @@ import com.insurance.insurancemanagementsystem.employee.repository.EmployeeRepos
 import com.insurance.insurancemanagementsystem.user.Repository.UserRepository;
 import com.insurance.insurancemanagementsystem.user.entity.User;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +24,14 @@ public class AdminService implements AdminServiceInterface {
     private EmployeeRepository employeeRepository;
     private UserRepository userRepository;
     @Override
-    public ResponseEntity<String> AddEmployee(EmployeeRequestDTO employeeRequestDTO) {
+    public ResponseEntity<String> AddEmployee(ClaimSpecialization specialization,EmployeeRequestDTO employeeRequestDTO) {
          Employee employee = new Employee();
          employee.setName(employeeRequestDTO.getName());
          employee.setGender(employeeRequestDTO.getGender());
         employee.setEmail(employeeRequestDTO.getEmail());
         employee.setPhone(employeeRequestDTO.getPhone());
         employee.setAddress(employeeRequestDTO.getAddress());
-        employee.setSpecialization(ClaimSpecialization.ACCIDENTAL_DAMAGE);
+        employee.setSpecialization(specialization);
        User user= userRepository.findByUsername(employeeRequestDTO.getName()).
         orElseThrow(()->new RuntimeException("Not valid name"));
        employee.setUser(user);

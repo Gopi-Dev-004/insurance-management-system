@@ -6,9 +6,11 @@ import com.insurance.insurancemanagementsystem.vehicle.dto.*;
 import com.insurance.insurancemanagementsystem.vehicle.entity.CarDetails;
 import com.insurance.insurancemanagementsystem.vehicle.entity.CarModel;
 import com.insurance.insurancemanagementsystem.vehicle.entity.Manufacturer;
+import com.insurance.insurancemanagementsystem.vehicle.entity.Vehicle;
 import com.insurance.insurancemanagementsystem.vehicle.repository.CarDetailsRepository;
 import com.insurance.insurancemanagementsystem.vehicle.repository.CarManufacturerRepository;
 import com.insurance.insurancemanagementsystem.vehicle.repository.CarModelRepository;
+import com.insurance.insurancemanagementsystem.vehicle.repository.VehicleRepository;
 import com.insurance.insurancemanagementsystem.vehicle.service.CarCRUDServiceInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,7 @@ public class CarCRUDService implements CarCRUDServiceInterface {
     private final CarManufacturerRepository manRef;
     private final CarModelRepository carModelRep;
     private final CarDetailsRepository carDetailsRep;
+    private VehicleRepository vehicleRepository;
 
     @Override
     public String addManufacturer(String manufacturerName) {
@@ -147,5 +150,11 @@ public class CarCRUDService implements CarCRUDServiceInterface {
         dto.setFuelType(carDetails.getFuelType());
 
       return dto;
+    }
+    public Long SaveVehicle(CarDetails carDetails){
+        Vehicle vehicle=new Vehicle();
+
+
+        return null;
     }
 }

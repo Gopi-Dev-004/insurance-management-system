@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 public interface AdminServiceInterface {
-    ResponseEntity<String> AddEmployee(EmployeeRequestDTO employeeRequestDTO);
+    ResponseEntity<String> AddEmployee(ClaimSpecialization specialization,EmployeeRequestDTO employeeRequestDTO);
     ResponseEntity<Page<Employee>> AllEmployeeDetail(int pageNumber);
     ResponseEntity<Page<Employee>> FindByEmployees(ClaimSpecialization specialization, int pageNumber);
     ResponseEntity<EmployeeResponseDTO>UpdateEmployee(Long id,EmployeeRequestDTO employeeRequestDTO);

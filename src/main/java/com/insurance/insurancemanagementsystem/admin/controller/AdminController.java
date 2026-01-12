@@ -1,5 +1,4 @@
 package com.insurance.insurancemanagementsystem.admin.controller;
-
 import com.insurance.insurancemanagementsystem.admin.service.AdminServiceInterface;
 import com.insurance.insurancemanagementsystem.common.enums.ClaimSpecialization;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeRequestDTO;
@@ -20,9 +19,9 @@ import java.util.Optional;
 public class AdminController {
   private AdminServiceInterface adminServiceInterface;
   @PostMapping("/signInEmployee")
-    public ResponseEntity<String> AddEmployee(@Valid @RequestBody EmployeeRequestDTO employeeRequestDTO){
+    public ResponseEntity<String> AddEmployee(@RequestParam ClaimSpecialization specialization,@Valid @RequestBody EmployeeRequestDTO employeeRequestDTO){
 
-      return adminServiceInterface.AddEmployee(employeeRequestDTO);
+      return adminServiceInterface.AddEmployee(specialization,employeeRequestDTO);
   }
 @GetMapping("/allEmployee")
     public ResponseEntity<Page<Employee>> AllEmployeeDetails(@RequestParam int pageNumber){
@@ -43,4 +42,5 @@ public class AdminController {
 
       return adminServiceInterface.DeleteEmployee(id);
 }
+
 }
