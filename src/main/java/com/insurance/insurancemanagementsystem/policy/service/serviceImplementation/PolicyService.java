@@ -9,6 +9,7 @@ import com.insurance.insurancemanagementsystem.common.util.PolicyUtil;
 import com.insurance.insurancemanagementsystem.policy.dto.PolicyPremiumCalculationResponseDTO;
 import com.insurance.insurancemanagementsystem.policy.entity.*;
 import com.insurance.insurancemanagementsystem.policy.repository.AddonPricingRepository;
+import com.insurance.insurancemanagementsystem.policy.repository.CarAgeDepreciationRepository;
 import com.insurance.insurancemanagementsystem.policy.repository.PolicyPricingRepository;
 import com.insurance.insurancemanagementsystem.policy.repository.PolicyRepository;
 import com.insurance.insurancemanagementsystem.policy.service.PolicyServiceInterface;
@@ -27,7 +28,7 @@ public class PolicyService implements PolicyServiceInterface {
 
     CarDetailsRepository carDetailsRep;
 
-//    CarAgeDepreciationRepository depreciationRep;
+    CarAgeDepreciationRepository depreciationRep;
 
     PolicyPricingRepository policyPricingRep;
 
@@ -66,23 +67,24 @@ public class PolicyService implements PolicyServiceInterface {
                             yearlyPremium
                     );
 
+            createPolicy(dto,policyPricing.getBasePremium(),finalPayableAmount,dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3,null);
+
             return finalPayableAmount;
         }
 
         //  for OWN_DAMAGE, COMPREHENSIVE policy
 
-/*
-        int carAge = (int) ChronoUnit.YEARS.between(dto.getVehicleRegistrationDate(), LocalDate.now());
 
-        CarAgeDepreciation depreciation;
 
-        if (carAge <= 5) {
-            depreciation = depreciationRep.findByAge(carAge);
-        } else {
-            depreciation = depreciationRep.findByAge(10);
-        }
+        CarAgeDepreciation depreciation = depreciationRep.findByAge(
+                PolicyUtil.normalizeDepreciationAge(
+                        PolicyUtil.calculateCarAge(
+                                dto.getVehicleRegistrationDate()
+                        )
+                )
+        );
 
-         find idv value
+      //   find idv value
 
         BigDecimal idv = carDetails
                 .getIdvValue().subtract(carDetails
@@ -90,12 +92,6 @@ public class PolicyService implements PolicyServiceInterface {
                         multiply(depreciation.getDepreciationPercentage()
                                 .divide(BigDecimal.valueOf(100))));
 
-
-
-        BigDecimal basePremium = idv
-                .multiply(policyPricing.getBasePremium())
-                .divide(BigDecimal.valueOf(100));
-*/
 
         // addon
         BigDecimal addonPrice = BigDecimal.ZERO;
@@ -126,12 +122,12 @@ public class PolicyService implements PolicyServiceInterface {
                 policyPricing.getBasePremium().add(addonPrice)
         );
 
-        createPolicy(dto,policyPricing.getBasePremium(),finalPayableAmount,dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3);
+        createPolicy(dto,policyPricing.getBasePremium(),finalPayableAmount,dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3,idv);
         return finalPayableAmount;
     }
 
 
-    public void createPolicy(PolicyPremiumCalculationResponseDTO dto,BigDecimal basePremium, BigDecimal totalPremium,int yearOfPolicy)
+    public void createPolicy(PolicyPremiumCalculationResponseDTO dto,BigDecimal basePremium, BigDecimal totalPremium,int yearOfPolicy,BigDecimal idv)
     {
         Policy policy = new Policy();
 
@@ -139,7 +135,7 @@ public class PolicyService implements PolicyServiceInterface {
 
         policy.setPolicyType(dto.getPolicyType());
 
-        //here want to add vehicle id
+        //here want to add vehicle
 
         policy.setBasePremium(basePremium);
 
