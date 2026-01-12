@@ -119,7 +119,6 @@ public class CarCRUDService implements CarCRUDServiceInterface {
         return carDetails1.map(this::carDetailsMap);
     }
 
-
     private ManufacturerResponseDTO manufacturerMap(Manufacturer manufacturer){
 
         ManufacturerResponseDTO dto = new ManufacturerResponseDTO();

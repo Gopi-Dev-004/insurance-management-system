@@ -18,6 +18,13 @@ import java.util.List;
 @NoArgsConstructor
 public class PolicyPremiumCalculationResponseDTO {
 
+    @NotBlank(message = "Registration number is required")
+    @Pattern(
+            regexp = "^[A-Z]{2}\\d{2}[A-Z]{1,2}\\d{4}$",
+            message = "Invalid registration number format (Example: TN09AB1234)"
+    )
+    private String registrationNumber;
+
     @NotNull(message = "Car ID is required")
     private Long carId;
 
@@ -32,4 +39,5 @@ public class PolicyPremiumCalculationResponseDTO {
 
     @NotNull(message = "Policy duration is mandatory")
     private PolicyDuration policyDuration;
+
 }

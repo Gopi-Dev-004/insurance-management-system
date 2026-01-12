@@ -1,13 +1,16 @@
 package com.insurance.insurancemanagementsystem.policy.service.serviceImplementation;
 
+import com.insurance.insurancemanagementsystem.common.enums.AddonType;
+import com.insurance.insurancemanagementsystem.common.enums.PolicyDuration;
+import com.insurance.insurancemanagementsystem.common.enums.PolicyStatus;
 import com.insurance.insurancemanagementsystem.common.enums.PolicyType;
 import com.insurance.insurancemanagementsystem.common.exception.ResourceNotFoundException;
 import com.insurance.insurancemanagementsystem.common.util.PolicyUtil;
 import com.insurance.insurancemanagementsystem.policy.dto.PolicyPremiumCalculationResponseDTO;
-import com.insurance.insurancemanagementsystem.policy.entity.AddonPricing;
-import com.insurance.insurancemanagementsystem.policy.entity.PolicyPricing;
+import com.insurance.insurancemanagementsystem.policy.entity.*;
 import com.insurance.insurancemanagementsystem.policy.repository.AddonPricingRepository;
 import com.insurance.insurancemanagementsystem.policy.repository.PolicyPricingRepository;
+import com.insurance.insurancemanagementsystem.policy.repository.PolicyRepository;
 import com.insurance.insurancemanagementsystem.policy.service.PolicyServiceInterface;
 import com.insurance.insurancemanagementsystem.vehicle.entity.CarDetails;
 import com.insurance.insurancemanagementsystem.vehicle.repository.CarDetailsRepository;
@@ -15,6 +18,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +32,8 @@ public class PolicyService implements PolicyServiceInterface {
     PolicyPricingRepository policyPricingRep;
 
     AddonPricingRepository addonPricingRep;
+
+    PolicyRepository policyRepository;
 
     @Override
     public BigDecimal getPayableAmount(PolicyPremiumCalculationResponseDTO dto) {
@@ -119,6 +126,58 @@ public class PolicyService implements PolicyServiceInterface {
                 policyPricing.getBasePremium().add(addonPrice)
         );
 
+        createPolicy(dto,policyPricing.getBasePremium(),finalPayableAmount,dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3);
         return finalPayableAmount;
+    }
+
+
+    public void createPolicy(PolicyPremiumCalculationResponseDTO dto,BigDecimal basePremium, BigDecimal totalPremium,int yearOfPolicy)
+    {
+        Policy policy = new Policy();
+
+        policy.setPolicyNumber(generatePolicyNumber());
+
+        policy.setPolicyType(dto.getPolicyType());
+
+        //here want to add vehicle id
+
+        policy.setBasePremium(basePremium);
+
+        policy.setTotalPremium(totalPremium);
+
+        policy.setStartDate(LocalDate.now());
+
+        policy.setEndDate(policy.getStartDate().plusYears(yearOfPolicy));
+
+        policy.setPolicyStatus(PolicyStatus.PENDING_PAYMENT);
+
+        Policy newPolicy = policyRepository.save(policy);
+
+        savePolicyAddon(newPolicy,dto);
+
+    }
+
+    private void savePolicyAddon(Policy newPolicy,PolicyPremiumCalculationResponseDTO dto) {
+
+        if(dto.getAddonTypes() != null && !dto.getAddonTypes().isEmpty()){
+
+             for(AddonType type : dto.getAddonTypes() ){
+                 Addon addon = new Addon();
+
+                 addon.setAddonType(type);
+                 addon.setActive(true);
+
+                 PolicyAddon policyAddon = new PolicyAddon();
+
+                 policyAddon.setAddon(addon);
+                 policyAddon.setPolicy(newPolicy);
+                 policyAddon.setAddonDuration(dto.getPolicyDuration());
+                 policyAddon.setAddonPremium(addonPricingRep.findByAddonType(type).getPrice());
+             }
+        }
+    }
+
+    private String generatePolicyNumber() {
+        return String.valueOf(Math.abs(UUID.randomUUID().getMostSignificantBits())).substring(0, 10);
     }
 }
