@@ -114,9 +114,11 @@ public class PolicyService implements PolicyServiceInterface {
             throw new IllegalArgumentException("Invalid policy type");
         }
 
-        finalPayableAmount = policyPricing.getBasePremium().add(addonPrice);
+        finalPayableAmount = PolicyUtil.calculateFinalPremium(
+                dto.getPolicyDuration(),
+                policyPricing.getBasePremium().add(addonPrice)
+        );
 
         return finalPayableAmount;
-
     }
 }
