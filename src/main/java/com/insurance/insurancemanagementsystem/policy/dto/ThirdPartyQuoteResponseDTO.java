@@ -15,6 +15,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ThirdPartyQuoteResponseDTO {
 
+    private Long PolicyId;
+
     private BigDecimal basePremium;
 
     private BigDecimal totalPremiumAmount; // Base + GST
@@ -26,5 +28,6 @@ public class ThirdPartyQuoteResponseDTO {
     private LocalDate coverageStartDate;
 
     private LocalDate coverageEndDate;
+
 
 }

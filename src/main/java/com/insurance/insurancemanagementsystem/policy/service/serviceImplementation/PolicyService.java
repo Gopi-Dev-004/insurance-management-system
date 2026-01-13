@@ -74,6 +74,7 @@ public class PolicyService implements PolicyServiceInterface {
          Policy policy = createPolicy(dto,policyPricing.getBasePremium(),finalPayableAmount,dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3,BigDecimal.ZERO);
 
             ThirdPartyQuoteResponseDTO responseDTO = new ThirdPartyQuoteResponseDTO();
+            responseDTO.setPolicyId(policy.getId());
             responseDTO.setBasePremium(finalPayableAmount);
             responseDTO.setTotalPremiumAmount(finalPayableAmount);
             responseDTO.setPolicyType(dto.getPolicyType());
@@ -135,6 +136,7 @@ public class PolicyService implements PolicyServiceInterface {
       Policy policy = createPolicy(dto,policyPricing.getBasePremium(),finalPayableAmount,dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3,idv);
 
         ThirdPartyQuoteResponseDTO responseDTO = new ThirdPartyQuoteResponseDTO();
+        responseDTO.setPolicyId(policy.getId());
         responseDTO.setBasePremium(policyPricing.getBasePremium());
         responseDTO.setTotalPremiumAmount(finalPayableAmount);
         responseDTO.setPolicyType(dto.getPolicyType());
