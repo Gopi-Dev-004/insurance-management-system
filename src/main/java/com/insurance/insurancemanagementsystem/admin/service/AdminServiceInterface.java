@@ -4,6 +4,7 @@ import com.insurance.insurancemanagementsystem.common.enums.ClaimSpecialization;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeRequestDTO;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeResponseDTO;
 import com.insurance.insurancemanagementsystem.employee.entity.Employee;
+import com.insurance.insurancemanagementsystem.vehicle.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
@@ -13,4 +14,8 @@ public interface AdminServiceInterface {
     ResponseEntity<Page<Employee>> FindByEmployees(ClaimSpecialization specialization, int pageNumber);
     ResponseEntity<EmployeeResponseDTO>UpdateEmployee(Long id,EmployeeRequestDTO employeeRequestDTO);
    ResponseEntity<String> DeleteEmployee(Long id);
+   ResponseEntity<String> CarDeatilsUpdate(CarDetailsUpdateRequestDTO carDetailsUpdateRequestDTO);
+   ResponseEntity<String> UpdateCarModel(CarModelUpdateRequestDTO carModelUpdateRequestDTO);
+   ResponseEntity<String> UpdateManufacturer(UpdateManufacturerDTO updateManufacturerDTO);
+   ResponseEntity<String >VehicleUpdate(VehicleUpdateRequestDTO vehicleUpdateRequestDTO);
 }

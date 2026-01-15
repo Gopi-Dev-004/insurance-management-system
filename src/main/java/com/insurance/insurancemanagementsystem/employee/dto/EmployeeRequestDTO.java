@@ -14,7 +14,6 @@ public class EmployeeRequestDTO {
   @NotBlank(message = "Not null")
    private String userName;
     private String password;
-    private String accountStatus;
     private String name;
     private String gender;
     @Email(message = "only email type")

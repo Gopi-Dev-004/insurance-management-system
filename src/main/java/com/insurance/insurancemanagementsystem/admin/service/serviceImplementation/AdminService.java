@@ -6,8 +6,19 @@ import com.insurance.insurancemanagementsystem.employee.dto.EmployeeRequestDTO;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeResponseDTO;
 import com.insurance.insurancemanagementsystem.employee.entity.Employee;
 import com.insurance.insurancemanagementsystem.employee.repository.EmployeeRepository;
+import com.insurance.insurancemanagementsystem.user.Repository.RoleRepository;
 import com.insurance.insurancemanagementsystem.user.Repository.UserRepository;
+import com.insurance.insurancemanagementsystem.user.entity.Role;
 import com.insurance.insurancemanagementsystem.user.entity.User;
+import com.insurance.insurancemanagementsystem.vehicle.dto.*;
+import com.insurance.insurancemanagementsystem.vehicle.entity.CarDetails;
+import com.insurance.insurancemanagementsystem.vehicle.entity.CarModel;
+import com.insurance.insurancemanagementsystem.vehicle.entity.Manufacturer;
+import com.insurance.insurancemanagementsystem.vehicle.entity.Vehicle;
+import com.insurance.insurancemanagementsystem.vehicle.repository.CarDetailsRepository;
+import com.insurance.insurancemanagementsystem.vehicle.repository.CarManufacturerRepository;
+import com.insurance.insurancemanagementsystem.vehicle.repository.CarModelRepository;
+import com.insurance.insurancemanagementsystem.vehicle.repository.VehicleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,16 +34,33 @@ public class AdminService implements AdminServiceInterface {
 
     private EmployeeRepository employeeRepository;
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
+    private CarDetailsRepository carDetailsRepository;
+    private CarModelRepository carModelRepository;
+    private CarManufacturerRepository carManufacturerRepository;
+    private VehicleRepository vehicleRepository;
+
     @Override
     public ResponseEntity<String> AddEmployee(ClaimSpecialization specialization,EmployeeRequestDTO employeeRequestDTO) {
-         Employee employee = new Employee();
+        User user=new User();
+        if (userRepository.findByUsername(employeeRequestDTO.getUserName()).isPresent()) {
+            throw new RuntimeException("Username already exists!");
+        }
+        user.setUsername(employeeRequestDTO.getUserName());
+        user.setPassword(employeeRequestDTO.getPassword());
+        user.setAccountStatus("ACTIVE");
+        Role role = roleRepository.findByRoleName("ROLE_EMPLOYEE")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        user.getRoles().add(role);
+        userRepository.save(user);
+        Employee employee = new Employee();
          employee.setName(employeeRequestDTO.getName());
          employee.setGender(employeeRequestDTO.getGender());
         employee.setEmail(employeeRequestDTO.getEmail());
         employee.setPhone(employeeRequestDTO.getPhone());
         employee.setAddress(employeeRequestDTO.getAddress());
         employee.setSpecialization(specialization);
-       User user= userRepository.findByUsername(employeeRequestDTO.getName()).
+       User user1= userRepository.findByUsername(employeeRequestDTO.getUserName()).
         orElseThrow(()->new RuntimeException("Not valid name"));
        employee.setUser(user);
         employeeRepository.save(employee);
@@ -78,6 +106,68 @@ public class AdminService implements AdminServiceInterface {
         }
 
         return ResponseEntity.ok("delete successfully");
+    }
+
+    @Override
+    public ResponseEntity<String> CarDeatilsUpdate(CarDetailsUpdateRequestDTO carDetailsRequestDTO) {
+      CarDetails carDetails=  carDetailsRepository.findById(carDetailsRequestDTO.getId())
+              .orElseThrow(() -> new RuntimeException("Car not found with id: " + carDetailsRequestDTO.getId()));
+       Manufacturer manufacturer =carManufacturerRepository.findById(carDetailsRequestDTO.getManufacturerlId())
+                                .orElseThrow(() -> new RuntimeException("Car not found with id: " + carDetailsRequestDTO.getManufacturerlId()));
+      CarModel model=    carModelRepository.findById(carDetailsRequestDTO.getModelId())
+                  .orElseThrow(() -> new RuntimeException("Car not found with id: " + carDetailsRequestDTO.getId()));
+         carDetails.setModel(model);
+        carDetails.setManufacturer(manufacturer);
+        carDetails.setTransmission(carDetailsRequestDTO.getTransmissionType());
+     carDetails.setFuelType(carDetailsRequestDTO.getFuelType());
+     carDetails.setIdvValue(carDetailsRequestDTO.getIdvValue());
+     carDetailsRepository.save(carDetails);
+
+        return ResponseEntity.ok("Successfully");
+    }
+
+    @Override
+    public ResponseEntity<String> UpdateCarModel(CarModelUpdateRequestDTO carModelUpdateRequestDTO) {
+        CarModel carModel=carModelRepository.findById(carModelUpdateRequestDTO.getId()).
+                orElseThrow(()->new RuntimeException("Id  not Found"));
+       Manufacturer manufacturer= carManufacturerRepository.findById(carModelUpdateRequestDTO.getManufacturer())
+                           .orElseThrow(()->new RuntimeException("Id  not Found"));
+        carModel.setName(carModelUpdateRequestDTO.getName());
+        carModel.setManufacturer(manufacturer);
+        carModel.setBodyType(carModelUpdateRequestDTO.getBodyType());
+        carModel.setEngineCcRange(carModelUpdateRequestDTO.getEngineCcRange());
+        carModel.setSeatingCapacity(carModelUpdateRequestDTO.getSeatingCapacity());
+        carModelRepository.save(carModel);
+
+        return ResponseEntity.ok("Update Successfully");
+    }
+
+    @Override
+    public ResponseEntity<String> UpdateManufacturer(UpdateManufacturerDTO updateManufacturerDTO) {
+      Manufacturer manufacturer=  carManufacturerRepository.findById(updateManufacturerDTO.getId())
+              .orElseThrow(()->new RuntimeException("Id not Found"));
+      manufacturer.setName(updateManufacturerDTO.getName());
+      manufacturer.setActive(updateManufacturerDTO.getActive());
+      carManufacturerRepository.save(manufacturer);
+        return ResponseEntity.ok("Successfully");
+    }
+
+    @Override
+    public ResponseEntity<String> VehicleUpdate(VehicleUpdateRequestDTO vehicleUpdateRequestDTO) {
+     Vehicle vehicle= vehicleRepository.findById(vehicleUpdateRequestDTO.getId())
+             .orElseThrow(()->new RuntimeException("Id not Found"));
+    Manufacturer manufacturer= carManufacturerRepository.findById(vehicleUpdateRequestDTO.getManufacturer())
+             .orElseThrow(()->new RuntimeException("Id not Found"));
+    CarDetails carDetails=carDetailsRepository.findById(vehicleUpdateRequestDTO.getCarDetails())
+            .orElseThrow(()->new RuntimeException("Id not Found"));
+     vehicle.setManufacturer(manufacturer);
+     vehicle.setCarDetails(carDetails);
+     vehicle.setVehicleAge(vehicleUpdateRequestDTO.getVehicleAge());
+     vehicle.setRegistrationNumber(vehicleUpdateRequestDTO.getRegistrationNumber());
+     vehicle.setIdvValue(vehicleUpdateRequestDTO.getIdvValue());
+     vehicle.setRegistrationDate(vehicleUpdateRequestDTO.getRegistrationDate());
+     vehicleRepository.save(vehicle);
+        return ResponseEntity.ok("Successfully");
     }
 
     private EmployeeResponseDTO mapToResponseDTO(Employee employee) {

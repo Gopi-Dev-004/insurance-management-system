@@ -5,6 +5,7 @@ import com.insurance.insurancemanagementsystem.employee.dto.EmployeeRequestDTO;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeResponseDTO;
 import com.insurance.insurancemanagementsystem.employee.entity.Employee;
 import com.insurance.insurancemanagementsystem.employee.repository.EmployeeRepository;
+import com.insurance.insurancemanagementsystem.vehicle.dto.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -42,5 +43,22 @@ public class AdminController {
 
       return adminServiceInterface.DeleteEmployee(id);
 }
+@PutMapping("/updateCarDetails")
+    public  ResponseEntity<String> UpdateDetailsCar(@Valid @RequestBody CarDetailsUpdateRequestDTO carDetailsRequestDTO){
 
+      return adminServiceInterface.CarDeatilsUpdate(carDetailsRequestDTO);
+
+}
+@PutMapping("/updateCarModel")
+    public ResponseEntity<String> UpdateCarModel(@RequestBody CarModelUpdateRequestDTO carModelUpdateRequestDTO){
+      return adminServiceInterface.UpdateCarModel(carModelUpdateRequestDTO);
+}
+@PutMapping("/updateManufacturer")
+    public ResponseEntity<String> UpdateManufacturer(UpdateManufacturerDTO updateManufacturerDTO){
+
+      return adminServiceInterface.UpdateManufacturer(updateManufacturerDTO);
+}@PutMapping("/vehicleUpdate")
+public ResponseEntity<String > AllUpdateCar(VehicleUpdateRequestDTO vehicleUpdateRequestDTO){
+      return adminServiceInterface.VehicleUpdate(vehicleUpdateRequestDTO);
+    }
 }
