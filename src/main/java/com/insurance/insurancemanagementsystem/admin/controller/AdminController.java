@@ -1,6 +1,8 @@
 package com.insurance.insurancemanagementsystem.admin.controller;
 import com.insurance.insurancemanagementsystem.admin.service.AdminServiceInterface;
 import com.insurance.insurancemanagementsystem.common.enums.ClaimSpecialization;
+import com.insurance.insurancemanagementsystem.customer.dto.CustomerRequestDTO;
+import com.insurance.insurancemanagementsystem.customer.entity.Customer;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeRequestDTO;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeResponseDTO;
 import com.insurance.insurancemanagementsystem.employee.entity.Employee;
@@ -54,11 +56,31 @@ public class AdminController {
       return adminServiceInterface.UpdateCarModel(carModelUpdateRequestDTO);
 }
 @PutMapping("/updateManufacturer")
-    public ResponseEntity<String> UpdateManufacturer(UpdateManufacturerDTO updateManufacturerDTO){
+    public ResponseEntity<String> UpdateManufacturer(@RequestBody UpdateManufacturerDTO updateManufacturerDTO){
 
       return adminServiceInterface.UpdateManufacturer(updateManufacturerDTO);
 }@PutMapping("/vehicleUpdate")
-public ResponseEntity<String > AllUpdateCar(VehicleUpdateRequestDTO vehicleUpdateRequestDTO){
+public ResponseEntity<String > AllUpdateCar(@RequestBody VehicleUpdateRequestDTO vehicleUpdateRequestDTO){
       return adminServiceInterface.VehicleUpdate(vehicleUpdateRequestDTO);
     }
+@PostMapping("/saveUser")
+public ResponseEntity<String> SaveUser(@RequestParam Long id, @RequestBody CustomerRequestDTO customerRequestDTO){
+      return adminServiceInterface.AddUserDetails(id, customerRequestDTO);
+}
+@GetMapping("/viewAllCustomer")
+    public ResponseEntity<Page<Customer>>AllCustomer(@RequestParam int pageNumber){
+      return adminServiceInterface.AllCustomerDetails(pageNumber);
+}
+@GetMapping("/ViewCoustomer")
+    public ResponseEntity<Customer> ViewCoustomer(@RequestParam String mobile){
+      return adminServiceInterface.ViewCustomer(mobile);
+}
+@PutMapping("/updateCustomer")
+    public ResponseEntity<String>UpdateCustomer(  @RequestParam Long id,@RequestBody CustomerRequestDTO customerRequestDTO){
+      return adminServiceInterface.UpdateCustomer(id,customerRequestDTO);
+}
+@DeleteMapping("/deleteCustomer")
+    public ResponseEntity<String> DeleteCustomer( @RequestParam Long id){
+      return adminServiceInterface.DeleteCustomer(id);
+}
 }

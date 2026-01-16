@@ -1,6 +1,8 @@
 package com.insurance.insurancemanagementsystem.admin.service;
 
 import com.insurance.insurancemanagementsystem.common.enums.ClaimSpecialization;
+import com.insurance.insurancemanagementsystem.customer.dto.CustomerRequestDTO;
+import com.insurance.insurancemanagementsystem.customer.entity.Customer;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeRequestDTO;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeResponseDTO;
 import com.insurance.insurancemanagementsystem.employee.entity.Employee;
@@ -18,4 +20,9 @@ public interface AdminServiceInterface {
    ResponseEntity<String> UpdateCarModel(CarModelUpdateRequestDTO carModelUpdateRequestDTO);
    ResponseEntity<String> UpdateManufacturer(UpdateManufacturerDTO updateManufacturerDTO);
    ResponseEntity<String >VehicleUpdate(VehicleUpdateRequestDTO vehicleUpdateRequestDTO);
+   ResponseEntity<String> AddUserDetails(Long id, CustomerRequestDTO customerRequestDTO);
+   ResponseEntity<Page<Customer>> AllCustomerDetails(int pageNumber);
+   ResponseEntity<Customer>ViewCustomer(String mobile);
+   ResponseEntity<String>UpdateCustomer(Long id,CustomerRequestDTO customerRequestDTO);
+   ResponseEntity<String>DeleteCustomer(Long id);
 }

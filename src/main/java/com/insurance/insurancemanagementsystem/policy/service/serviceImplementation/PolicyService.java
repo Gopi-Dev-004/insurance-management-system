@@ -6,6 +6,7 @@ import com.insurance.insurancemanagementsystem.common.enums.PolicyStatus;
 import com.insurance.insurancemanagementsystem.common.enums.PolicyType;
 import com.insurance.insurancemanagementsystem.common.exception.ResourceNotFoundException;
 import com.insurance.insurancemanagementsystem.common.util.PolicyUtil;
+import com.insurance.insurancemanagementsystem.payment.service.serviceImplementation.PaymentService;
 import com.insurance.insurancemanagementsystem.policy.dto.PolicyPremiumCalculationResponseDTO;
 import com.insurance.insurancemanagementsystem.policy.dto.ThirdPartyQuoteResponseDTO;
 import com.insurance.insurancemanagementsystem.policy.entity.*;
@@ -41,6 +42,8 @@ public class PolicyService implements PolicyServiceInterface {
 
     CarCRUDService carCRUDService;
 
+    PaymentService paymentService;
+
     @Override
     public ThirdPartyQuoteResponseDTO getPayableAmount(PolicyPremiumCalculationResponseDTO dto) {
 
@@ -57,7 +60,6 @@ public class PolicyService implements PolicyServiceInterface {
 
         // getting policy details for get basic premium
         PolicyPricing policyPricing = policyPricingRep.findByPolicyType(dto.getPolicyType());
-
         BigDecimal finalPayableAmount = BigDecimal.ZERO;
 
         if (dto.getPolicyType() == PolicyType.THIRD_PARTY)
@@ -133,7 +135,8 @@ public class PolicyService implements PolicyServiceInterface {
         );
 
       Policy policy = createPolicy(dto,policyPricing.getBasePremium(),finalPayableAmount,dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3,idv);
-
+       Long id= policy.getId();
+      paymentService.SavePayment(id);
         ThirdPartyQuoteResponseDTO responseDTO = new ThirdPartyQuoteResponseDTO();
         responseDTO.setBasePremium(policyPricing.getBasePremium());
         responseDTO.setTotalPremiumAmount(finalPayableAmount);
@@ -199,6 +202,7 @@ public class PolicyService implements PolicyServiceInterface {
                  policyAddon.setPolicy(newPolicy);
                  policyAddon.setAddonDuration(dto.getPolicyDuration());
                  policyAddon.setAddonPremium(addonPricingRep.findByAddonType(type).getPrice());
+
              }
         }
     }

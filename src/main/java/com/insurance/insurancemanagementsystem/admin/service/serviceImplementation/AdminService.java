@@ -2,6 +2,9 @@ package com.insurance.insurancemanagementsystem.admin.service.serviceImplementat
 
 import com.insurance.insurancemanagementsystem.admin.service.AdminServiceInterface;
 import com.insurance.insurancemanagementsystem.common.enums.ClaimSpecialization;
+import com.insurance.insurancemanagementsystem.customer.dto.CustomerRequestDTO;
+import com.insurance.insurancemanagementsystem.customer.entity.Customer;
+import com.insurance.insurancemanagementsystem.customer.repository.CustomerRepository;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeRequestDTO;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeResponseDTO;
 import com.insurance.insurancemanagementsystem.employee.entity.Employee;
@@ -39,6 +42,7 @@ public class AdminService implements AdminServiceInterface {
     private CarModelRepository carModelRepository;
     private CarManufacturerRepository carManufacturerRepository;
     private VehicleRepository vehicleRepository;
+    private CustomerRepository customerRepository;
 
     @Override
     public ResponseEntity<String> AddEmployee(ClaimSpecialization specialization,EmployeeRequestDTO employeeRequestDTO) {
@@ -85,11 +89,15 @@ public class AdminService implements AdminServiceInterface {
     public ResponseEntity<EmployeeResponseDTO> UpdateEmployee(Long id,EmployeeRequestDTO employeeRequestDTO) {
       Employee employee =employeeRepository.findById(id).
                 orElseThrow(()->new RuntimeException("Not valid"));
+       User user= employee.getUser();
+       user.setUsername(employeeRequestDTO.getUserName());
+       user.setPassword(employeeRequestDTO.getPassword());
       employee.setName(employeeRequestDTO.getName());
       employee.setEmail(employeeRequestDTO.getEmail());
       employee.setGender(employeeRequestDTO.getGender());
       employee.setAddress(employeeRequestDTO.getAddress());
       employee.setPhone(employeeRequestDTO.getPhone());
+      userRepository.save(user);
         Employee savedEmployee = employeeRepository.save(employee);
         EmployeeResponseDTO responseDTO = mapToResponseDTO(savedEmployee);
         return ResponseEntity.ok(responseDTO);
@@ -167,6 +175,63 @@ public class AdminService implements AdminServiceInterface {
      vehicle.setIdvValue(vehicleUpdateRequestDTO.getIdvValue());
      vehicle.setRegistrationDate(vehicleUpdateRequestDTO.getRegistrationDate());
      vehicleRepository.save(vehicle);
+        return ResponseEntity.ok("Successfully");
+    }
+
+    @Override
+    public ResponseEntity<String> AddUserDetails(Long id, CustomerRequestDTO customerRequestDTO) {
+        Customer customer=new Customer();
+        customer.setFirstName(customerRequestDTO.getFirstName());
+        customer.setLastName(customerRequestDTO.getLastName());
+        customer.setDob(customerRequestDTO.getDob());
+        customer.setEmail(customerRequestDTO.getEmail());
+        customer.setAddress(customerRequestDTO.getAddress());
+        customer.setGender(customerRequestDTO.getGender());
+        customer.setMobile(customerRequestDTO.getMobile());
+        customer.setKycStatus(customerRequestDTO.getKycStatus());
+      User user=  userRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("Id not Found"));
+      customer.setUser(user);
+      customerRepository.save(customer);
+        return ResponseEntity.ok("Successfully");
+    }
+
+    @Override
+    public ResponseEntity<Page<Customer>> AllCustomerDetails(int pageNumber) {
+        Pageable pageable=PageRequest.of(pageNumber,5);
+      Page<Customer> customers=   customerRepository.findAll(pageable);
+        return ResponseEntity.ok(customers);
+    }
+
+    @Override
+    public ResponseEntity<Customer> ViewCustomer(String mobile) {
+       Customer customer =customerRepository.findByMobile(mobile);
+        return ResponseEntity.ok(customer);
+    }
+
+    @Override
+    public ResponseEntity<String> UpdateCustomer(Long id, CustomerRequestDTO customerRequestDTO) {
+        Customer customer= customerRepository.findById(id)
+                 .orElseThrow(()->new RuntimeException("Id not Found"));
+        customer.setFirstName(customerRequestDTO.getFirstName());
+        customer.setLastName(customerRequestDTO.getLastName());
+        customer.setDob(customerRequestDTO.getDob());
+        customer.setEmail(customerRequestDTO.getEmail());
+        customer.setAddress(customerRequestDTO.getAddress());
+        customer.setGender(customerRequestDTO.getGender());
+        customer.setMobile(customerRequestDTO.getMobile());
+        customer.setKycStatus(customerRequestDTO.getKycStatus());
+        User user= customer.getUser();
+        customer.setUser(user);
+        customerRepository.save(customer);
+        return ResponseEntity.ok("Successfully");
+    }
+
+    @Override
+    public ResponseEntity<String> DeleteCustomer(Long id) {
+      Customer customer=  customerRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("Id not Found"));
+      customerRepository.delete(customer);
         return ResponseEntity.ok("Successfully");
     }
 
