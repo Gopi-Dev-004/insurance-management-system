@@ -1,12 +1,12 @@
 package com.insurance.insurancemanagementsystem.policy.service.serviceImplementation;
 
-import com.insurance.insurancemanagementsystem.common.enums.AddonType;
-import com.insurance.insurancemanagementsystem.common.enums.PolicyDuration;
-import com.insurance.insurancemanagementsystem.common.enums.PolicyStatus;
-import com.insurance.insurancemanagementsystem.common.enums.PolicyType;
+import com.insurance.insurancemanagementsystem.common.enums.*;
 import com.insurance.insurancemanagementsystem.common.exception.ResourceNotFoundException;
 import com.insurance.insurancemanagementsystem.common.util.PolicyUtil;
-import com.insurance.insurancemanagementsystem.payment.service.serviceImplementation.PaymentService;
+import com.insurance.insurancemanagementsystem.insurance.dto.PolicyPaymentRequestDTO;
+import com.insurance.insurancemanagementsystem.insurance.service.serviceImplementation.InsuranceService;
+import com.insurance.insurancemanagementsystem.payment.entity.Payment;
+import com.insurance.insurancemanagementsystem.payment.repository.PaymentRepository;
 import com.insurance.insurancemanagementsystem.policy.dto.PolicyPremiumCalculationResponseDTO;
 import com.insurance.insurancemanagementsystem.policy.dto.ThirdPartyQuoteResponseDTO;
 import com.insurance.insurancemanagementsystem.policy.entity.*;
@@ -19,11 +19,14 @@ import com.insurance.insurancemanagementsystem.vehicle.entity.CarDetails;
 import com.insurance.insurancemanagementsystem.vehicle.entity.Vehicle;
 import com.insurance.insurancemanagementsystem.vehicle.repository.CarDetailsRepository;
 import com.insurance.insurancemanagementsystem.vehicle.service.serviceImplementation.CarCRUDService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -41,11 +44,12 @@ public class PolicyService implements PolicyServiceInterface {
     PolicyRepository policyRepository;
 
     CarCRUDService carCRUDService;
+    private PaymentRepository paymentRepository;
+    private InsuranceService insuranceService;
 
-    PaymentService paymentService;
 
     @Override
-    public ThirdPartyQuoteResponseDTO getPayableAmount(PolicyPremiumCalculationResponseDTO dto) {
+    public ThirdPartyQuoteResponseDTO getPayableAmount(Long customerId,PolicyPremiumCalculationResponseDTO dto) {
 
         // for THIRD_PARTY policy
 
@@ -136,7 +140,6 @@ public class PolicyService implements PolicyServiceInterface {
 
       Policy policy = createPolicy(dto,policyPricing.getBasePremium(),finalPayableAmount,dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3,idv);
        Long id= policy.getId();
-      paymentService.SavePayment(id);
         ThirdPartyQuoteResponseDTO responseDTO = new ThirdPartyQuoteResponseDTO();
         responseDTO.setBasePremium(policyPricing.getBasePremium());
         responseDTO.setTotalPremiumAmount(finalPayableAmount);
@@ -205,6 +208,43 @@ public class PolicyService implements PolicyServiceInterface {
 
              }
         }
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity<String> createPayment(PolicyPaymentRequestDTO dto) {
+
+        // get policy
+        Policy policy = policyRepository.findById(dto.getPolicyId())
+                .orElseThrow(() -> new RuntimeException("id not found"));
+
+        // create payment
+        Payment payment = new Payment();
+
+        payment.setPaymentMethod(dto.getPaymentMethod());
+        payment.setPaymentStatus(PaymentStatus.SUCCESS);
+        payment.setPaymentDate(LocalDateTime.now());
+        payment.setPaymentReference(generatePaymentReference());
+        payment.setTransactionId(generateTransactionId());
+        payment.setPolicy(policy);
+        payment.setAmountPaid(policy.getBasePremium());
+        paymentRepository.save(payment);
+
+        // update policy status to  ACTIVE
+        policy.setPolicyStatus(PolicyStatus.ACTIVE);
+        policyRepository.save(policy);
+        // create insurance
+        insuranceService.createInsurance(dto.getCustomerId(), payment);
+        return ResponseEntity.ok("Successfully");
+    }
+
+    public String generatePaymentReference() {
+        return "PAY-" + UUID.randomUUID().toString().substring(0, 10).toUpperCase();
+    }
+
+    public String generateTransactionId() {
+        return "TXN-" + System.currentTimeMillis() + "-"
+                + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
     }
 
     private String generatePolicyNumber() {

@@ -7,6 +7,8 @@ import com.insurance.insurancemanagementsystem.employee.dto.EmployeeRequestDTO;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeResponseDTO;
 import com.insurance.insurancemanagementsystem.employee.entity.Employee;
 import com.insurance.insurancemanagementsystem.employee.repository.EmployeeRepository;
+import com.insurance.insurancemanagementsystem.insurance.dto.InsuranceRequestDTO;
+import com.insurance.insurancemanagementsystem.insurance.entity.Insurance;
 import com.insurance.insurancemanagementsystem.vehicle.dto.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -83,4 +85,13 @@ public ResponseEntity<String> SaveUser(@RequestParam Long id, @RequestBody Custo
     public ResponseEntity<String> DeleteCustomer( @RequestParam Long id){
       return adminServiceInterface.DeleteCustomer(id);
 }
+@GetMapping("/viewAllInsurance")
+    public ResponseEntity<Page<Insurance>> ViewAllInsurance(@RequestParam int pageNumber){
+      return adminServiceInterface.viewAllInsurance(pageNumber);
+}
+@PutMapping("/updateInsurance")
+  public  ResponseEntity<String> UpdateInsurance(@RequestParam Long id,@RequestBody InsuranceRequestDTO insuranceRequestDTO){
+      return adminServiceInterface.UpdateInsurance(id,insuranceRequestDTO);
+}
+
 }

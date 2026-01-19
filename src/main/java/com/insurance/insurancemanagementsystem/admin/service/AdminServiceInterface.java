@@ -6,6 +6,8 @@ import com.insurance.insurancemanagementsystem.customer.entity.Customer;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeRequestDTO;
 import com.insurance.insurancemanagementsystem.employee.dto.EmployeeResponseDTO;
 import com.insurance.insurancemanagementsystem.employee.entity.Employee;
+import com.insurance.insurancemanagementsystem.insurance.dto.InsuranceRequestDTO;
+import com.insurance.insurancemanagementsystem.insurance.entity.Insurance;
 import com.insurance.insurancemanagementsystem.vehicle.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -25,4 +27,6 @@ public interface AdminServiceInterface {
    ResponseEntity<Customer>ViewCustomer(String mobile);
    ResponseEntity<String>UpdateCustomer(Long id,CustomerRequestDTO customerRequestDTO);
    ResponseEntity<String>DeleteCustomer(Long id);
+   ResponseEntity<Page<Insurance>>viewAllInsurance(int pageNumber);
+   ResponseEntity<String >UpdateInsurance(Long id,InsuranceRequestDTO insuranceRequestDTO);
 }
