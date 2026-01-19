@@ -16,7 +16,7 @@ public interface CarDetailsRepository  extends JpaRepository<CarDetails,Long> {
             SELECT d FROM CarDetails d WHERE d.model = :model
             """)
     Page<CarDetails> getCarDetails(@Param("model") CarModel carModel , Pageable pageable);
-
+   CarDetails findBymodelId(Long modelId);
 
 
 }

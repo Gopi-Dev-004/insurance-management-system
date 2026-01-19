@@ -17,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PolicyPremiumCalculationResponseDTO {
-
     @NotBlank(message = "Registration number is required")
     @Pattern(
             regexp = "^[A-Z]{2}\\d{2}[A-Z]{1,2}\\d{4}$",

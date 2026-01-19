@@ -43,7 +43,6 @@ public final class PolicyUtil {
 
         BigDecimal threeYearPremium =
                 yearlyPremium.multiply(THREE_YEAR_MULTIPLIER);
-
         BigDecimal discount =
                 threeYearPremium
                         .multiply(THREE_YEAR_DISCOUNT_PERCENT)
