@@ -4,6 +4,7 @@ import com.insurance.insurancemanagementsystem.insurance.dto.PolicyPaymentReques
 import com.insurance.insurancemanagementsystem.policy.dto.PolicyPremiumCalculationResponseDTO;
 import com.insurance.insurancemanagementsystem.policy.dto.ThirdPartyQuoteResponseDTO;
 import com.insurance.insurancemanagementsystem.policy.service.PolicyServiceInterface;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class PolicyController {
 
     }
     @PostMapping("/pay")
-    public ResponseEntity<String> createPayment(@RequestBody PolicyPaymentRequestDTO policyPaymentRequestDTO){
+    public ResponseEntity<String> createPayment(@RequestBody PolicyPaymentRequestDTO policyPaymentRequestDTO) throws MessagingException {
         return policyService.createPayment(policyPaymentRequestDTO);
     }
 

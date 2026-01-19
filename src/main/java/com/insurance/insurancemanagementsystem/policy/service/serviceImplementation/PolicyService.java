@@ -19,6 +19,7 @@ import com.insurance.insurancemanagementsystem.vehicle.entity.CarDetails;
 import com.insurance.insurancemanagementsystem.vehicle.entity.Vehicle;
 import com.insurance.insurancemanagementsystem.vehicle.repository.CarDetailsRepository;
 import com.insurance.insurancemanagementsystem.vehicle.service.serviceImplementation.CarCRUDService;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -213,7 +214,7 @@ public class PolicyService implements PolicyServiceInterface {
 
     @Transactional
     @Override
-    public ResponseEntity<String> createPayment(PolicyPaymentRequestDTO dto) {
+    public ResponseEntity<String> createPayment(PolicyPaymentRequestDTO dto) throws MessagingException {
 
         // get policy
         Policy policy = policyRepository.findById(dto.getPolicyId())
