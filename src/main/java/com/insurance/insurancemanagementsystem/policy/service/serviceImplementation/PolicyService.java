@@ -147,8 +147,7 @@ public class PolicyService implements PolicyServiceInterface {
     }
 
 
-    public Policy createPolicy(PolicyPremiumCalculationResponseDTO dto,BigDecimal basePremium, BigDecimal totalPremium,int yearOfPolicy,BigDecimal idv)
-    {
+    public Policy createPolicy(PolicyPremiumCalculationResponseDTO dto,BigDecimal basePremium, BigDecimal totalPremium,int yearOfPolicy,BigDecimal idv) {
         Policy policy = new Policy();
 
         //create Vehicle
