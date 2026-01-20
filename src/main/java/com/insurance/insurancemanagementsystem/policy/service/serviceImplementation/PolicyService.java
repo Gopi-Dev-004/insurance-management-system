@@ -219,6 +219,10 @@ public class PolicyService implements PolicyServiceInterface {
         Policy policy = policyRepository.findById(dto.getPolicyId())
                 .orElseThrow(() -> new RuntimeException("id not found"));
 
+        if (policy.getPolicyStatus() != PolicyStatus.PENDING_PAYMENT) {
+            throw new RuntimeException("Payment already done");
+        }
+
         // create payment
         Payment payment = new Payment();
 

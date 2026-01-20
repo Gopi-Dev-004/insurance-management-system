@@ -35,7 +35,7 @@ public class InsuranceService {
         Vehicle vehicle = policy.getVehicle();
         insurance.setVehicle(vehicle);
         insurance.setCustomer(customer);
-        insurance.setClaimStatus(ClaimStatus.NOT_CLAIMED);
+        insurance.setClaimStatus(ClaimStatus.REJECTED);
         insurance.setPolicyStartDate(policy.getStartDate());
         insurance.setPolicyEndDate(policy.getEndDate());
 
