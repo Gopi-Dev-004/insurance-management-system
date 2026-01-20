@@ -3,7 +3,7 @@ package com.insurance.insurancemanagementsystem.policy.service.serviceImplementa
 import com.insurance.insurancemanagementsystem.common.enums.*;
 import com.insurance.insurancemanagementsystem.common.exception.ResourceNotFoundException;
 import com.insurance.insurancemanagementsystem.common.util.PolicyUtil;
-import com.insurance.insurancemanagementsystem.insurance.dto.PolicyPaymentRequestDTO;
+import com.insurance.insurancemanagementsystem.policy.dto.PolicyPaymentRequestDTO;
 import com.insurance.insurancemanagementsystem.insurance.service.serviceImplementation.InsuranceService;
 import com.insurance.insurancemanagementsystem.payment.entity.Payment;
 import com.insurance.insurancemanagementsystem.payment.repository.PaymentRepository;
