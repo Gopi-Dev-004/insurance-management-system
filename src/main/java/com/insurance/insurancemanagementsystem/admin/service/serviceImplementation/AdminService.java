@@ -12,6 +12,9 @@ import com.insurance.insurancemanagementsystem.employee.repository.EmployeeRepos
 import com.insurance.insurancemanagementsystem.insurance.dto.InsuranceRequestDTO;
 import com.insurance.insurancemanagementsystem.insurance.entity.Insurance;
 import com.insurance.insurancemanagementsystem.insurance.repository.InsuranceRepository;
+import com.insurance.insurancemanagementsystem.policy.dto.*;
+import com.insurance.insurancemanagementsystem.policy.entity.*;
+import com.insurance.insurancemanagementsystem.policy.repository.*;
 import com.insurance.insurancemanagementsystem.user.Repository.RoleRepository;
 import com.insurance.insurancemanagementsystem.user.Repository.UserRepository;
 import com.insurance.insurancemanagementsystem.user.entity.Role;
@@ -48,6 +51,11 @@ public class AdminService implements AdminServiceInterface {
     private VehicleRepository vehicleRepository;
     private CustomerRepository customerRepository;
     private InsuranceRepository insuranceRepository;
+    private AddonRepository addonRepository;
+    private AddonPricingRepository addonPricingRepository;
+    private CarAgeDepreciationRepository carAgeDepreciationRepository;
+    private PolicyAddonRepository policyAddonRepository;
+    private PolicyPricingRepository policyPricing;
 
     @Override
     public ResponseEntity<String> AddEmployee(ClaimSpecialization specialization, EmployeeRequestDTO employeeRequestDTO) {
@@ -249,7 +257,103 @@ public class AdminService implements AdminServiceInterface {
 
     @Override
     public ResponseEntity<String> UpdateInsurance(Long id, InsuranceRequestDTO insuranceRequestDTO) {
-        return null;
+        Insurance insurance = insuranceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Id not Found"));
+        insurance.setInsuranceStatus(insuranceRequestDTO.getInsuranceStatus());
+        insurance.setClaimStatus(insuranceRequestDTO.getClaimStatus());
+        insurance.setPolicyStartDate(insuranceRequestDTO.getPolicyStartDate());
+        insurance.setPolicyEndDate(insuranceRequestDTO.getPolicyEndDate());
+        insurance.setCreatedAt(insuranceRequestDTO.getCreatedAt());
+        insuranceRepository.save(insurance);
+        return ResponseEntity.ok("Update Successfully");
+    }
+
+    @Override
+    public ResponseEntity<Page<Addon>> addonAllDetails(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 5);
+        Page<Addon> addons = addonRepository.findAll(pageable);
+        return ResponseEntity.ok(addons);
+    }
+
+    @Override
+    public ResponseEntity<String> updateAddon(Long addonId, AddonRequestDTO addonRequestDTO) {
+        Addon addon = addonRepository.findById(addonId)
+                .orElseThrow(() -> new RuntimeException("Id not Found"));
+        addon.setAddonType(addonRequestDTO.getAddonType());
+        addon.setDescription(addon.getDescription());
+        addon.setActive(addonRequestDTO.getActive());
+        addonRepository.save(addon);
+        return ResponseEntity.ok("Update Successfully");
+    }
+
+    @Override
+    public ResponseEntity<Page<AddonPricing>> viewAddonPricing(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 5);
+        Page<AddonPricing> addonPricing = addonPricingRepository.findAll(pageable);
+        return ResponseEntity.ok(addonPricing);
+    }
+
+    @Override
+    public ResponseEntity<String> updateAddonPricing(Long addonpicingId, AddonPricingRequestDTO addonPricingRequestDTO) {
+        AddonPricing addonPricing = addonPricingRepository.findById(addonpicingId)
+                .orElseThrow(() -> new RuntimeException("Id not Found"));
+        addonPricing.setAddonType(addonPricingRequestDTO.getAddonType());
+        addonPricing.setPrice(addonPricingRequestDTO.getPrice());
+        addonPricing.setPrice(addonPricingRequestDTO.getPrice());
+        addonPricingRepository.save(addonPricing);
+        return ResponseEntity.ok("Update Successfully");
+    }
+
+    @Override
+    public ResponseEntity<Page<CarAgeDepreciation>> viewCarAgeDepreciation(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 5);
+        Page<CarAgeDepreciation> carAgeDepreciation = carAgeDepreciationRepository.findAll(pageable);
+        return ResponseEntity.ok(carAgeDepreciation);
+    }
+
+    @Override
+    public ResponseEntity<String> updateCarAgeDepreciation(Long carageId, CarAgeDepreciationRequestDTO carAgeDepreciationRequestDTO) {
+        CarAgeDepreciation carAgeDepreciation = carAgeDepreciationRepository.findById(carageId)
+                .orElseThrow(() -> new RuntimeException("Id not Found"));
+        carAgeDepreciation.setAge(carAgeDepreciationRequestDTO.getAge());
+        carAgeDepreciation.setActive(carAgeDepreciationRequestDTO.isActive());
+        carAgeDepreciation.setDepreciationPercentage(carAgeDepreciationRequestDTO.getDepreciationPercentage());
+        carAgeDepreciationRepository.save(carAgeDepreciation);
+        return ResponseEntity.ok("Update Successfully");
+    }
+
+    @Override
+    public ResponseEntity<Page<PolicyAddon>> viewPolicyAddon(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 5);
+        Page<PolicyAddon> addons = policyAddonRepository.findAll(pageable);
+        return ResponseEntity.ok(addons);
+    }
+
+    @Override
+    public ResponseEntity<String> updatePolicyAddon(Long policyId, PolicyAddonRequestDTO addonRequestDTO) {
+        PolicyAddon addon = policyAddonRepository.findById(policyId)
+                .orElseThrow(() -> new RuntimeException("Id not Found"));
+        addon.setAddonDuration(addonRequestDTO.getAddonDuration());
+        addon.setAddonPremium(addonRequestDTO.getAddonPremium());
+        policyAddonRepository.save(addon);
+        return ResponseEntity.ok("Update Successfully");
+    }
+
+    @Override
+    public ResponseEntity<Page<PolicyPricing>> viewPolicyPricing(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 5);
+        Page<PolicyPricing> policyPricings = policyPricing.findAll(pageable);
+        return ResponseEntity.ok(policyPricings);
+    }
+
+    @Override
+    public ResponseEntity<String> updatePolicyPricing(Long id, PolicyPricingRequestDTO dto) {
+        PolicyPricing policyPricing1 = policyPricing.findById(id)
+                .orElseThrow(() -> new RuntimeException("Id not Found"));
+        policyPricing1.setPolicyType(dto.getPolicyType());
+        policyPricing1.setActive(dto.isActive());
+        policyPricing1.setBasePremium(dto.getBasePremium());
+        return ResponseEntity.ok("Update Successfully");
     }
 
     private EmployeeResponseDTO mapToResponseDTO(Employee employee) {

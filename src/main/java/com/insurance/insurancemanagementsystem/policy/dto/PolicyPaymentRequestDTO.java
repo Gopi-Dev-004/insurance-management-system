@@ -1,4 +1,4 @@
-package com.insurance.insurancemanagementsystem.insurance.dto;
+package com.insurance.insurancemanagementsystem.policy.dto;
 
 import com.insurance.insurancemanagementsystem.common.enums.PaymentMethod;
 import lombok.AllArgsConstructor;

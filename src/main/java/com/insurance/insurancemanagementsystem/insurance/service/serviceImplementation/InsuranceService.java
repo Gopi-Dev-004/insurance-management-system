@@ -5,12 +5,14 @@ import com.insurance.insurancemanagementsystem.common.enums.InsuranceStatus;
 import com.insurance.insurancemanagementsystem.common.enums.PolicyStatus;
 import com.insurance.insurancemanagementsystem.customer.entity.Customer;
 import com.insurance.insurancemanagementsystem.customer.repository.CustomerRepository;
+import com.insurance.insurancemanagementsystem.email.service.EmailService;
 import com.insurance.insurancemanagementsystem.insurance.entity.Insurance;
 import com.insurance.insurancemanagementsystem.insurance.repository.InsuranceRepository;
 import com.insurance.insurancemanagementsystem.payment.entity.Payment;
 import com.insurance.insurancemanagementsystem.policy.entity.Policy;
 import com.insurance.insurancemanagementsystem.policy.repository.PolicyRepository;
 import com.insurance.insurancemanagementsystem.vehicle.entity.Vehicle;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +22,9 @@ public class InsuranceService {
     private CustomerRepository customerRepository;
     private InsuranceRepository insuranceRepository;
     private PolicyRepository policyRepository;
+    private EmailService emailService;
 
-    public String createInsurance(Long customerId, Payment payment) {
+    public String createInsurance(Long customerId, Payment payment) throws MessagingException {
 
         Insurance insurance = new Insurance();
 
@@ -40,6 +43,7 @@ public class InsuranceService {
         insurance.setPolicyEndDate(policy.getEndDate());
 
         insuranceRepository.save(insurance);
+        emailService. sendInsuranceDetailsEmail(customer.getEmail(),insurance);
 
         return "Successfully";
     }

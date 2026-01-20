@@ -3,7 +3,7 @@ package com.insurance.insurancemanagementsystem.policy.service.serviceImplementa
 import com.insurance.insurancemanagementsystem.common.enums.*;
 import com.insurance.insurancemanagementsystem.common.exception.ResourceNotFoundException;
 import com.insurance.insurancemanagementsystem.common.util.PolicyUtil;
-import com.insurance.insurancemanagementsystem.insurance.dto.PolicyPaymentRequestDTO;
+import com.insurance.insurancemanagementsystem.policy.dto.PolicyPaymentRequestDTO;
 import com.insurance.insurancemanagementsystem.insurance.service.serviceImplementation.InsuranceService;
 import com.insurance.insurancemanagementsystem.payment.entity.Payment;
 import com.insurance.insurancemanagementsystem.payment.repository.PaymentRepository;
@@ -19,6 +19,7 @@ import com.insurance.insurancemanagementsystem.vehicle.entity.CarDetails;
 import com.insurance.insurancemanagementsystem.vehicle.entity.Vehicle;
 import com.insurance.insurancemanagementsystem.vehicle.repository.CarDetailsRepository;
 import com.insurance.insurancemanagementsystem.vehicle.service.serviceImplementation.CarCRUDService;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -213,7 +214,7 @@ public class PolicyService implements PolicyServiceInterface {
 
     @Transactional
     @Override
-    public ResponseEntity<String> createPayment(PolicyPaymentRequestDTO dto) {
+    public ResponseEntity<String> createPayment(PolicyPaymentRequestDTO dto) throws MessagingException {
 
         // get policy
         Policy policy = policyRepository.findById(dto.getPolicyId())
