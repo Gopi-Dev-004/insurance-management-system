@@ -11,6 +11,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,16 +23,23 @@ public class ClaimService implements ClaimServiceInterface {
 
     @Override
     public ResponseEntity<List<ClaimResponseDTO>> viewClaimCustomer(Long customer_Id) {
-        ClaimResponseDTO dto = new ClaimResponseDTO();
-        List<Insurance> insurance1 = insuranceRepository.findByCustomerCustomerId(customer_Id);
-        for(Insurance insurance:insurance1 ){
-        dto.setId(insurance.getId());
-        dto.setName(insurance.getVehicle().getCarDetails().getModel().getName());
-        dto.setPolicyStatus(insurance.getPolicy().getPolicyStatus());
-        dto.setIdvValue(insurance.getVehicle().getIdvValue());
-        dto.setRegistrationNumber(insurance.getVehicle().getRegistrationNumber());
-}
 
-        return ResponseEntity.ok(Collections.singletonList(dto));
+        List<Insurance> insurance1 = insuranceRepository.findByCustomerCustomerId(customer_Id);
+
+        ArrayList<ClaimResponseDTO> listOfInsurance = new ArrayList<>();
+
+        for (Insurance insurance : insurance1) {
+
+            ClaimResponseDTO dto = new ClaimResponseDTO();
+            dto.setId(insurance.getId());
+            dto.setName(insurance.getVehicle().getCarDetails().getModel().getName());
+            dto.setPolicyStatus(insurance.getPolicy().getPolicyStatus());
+            dto.setIdvValue(insurance.getVehicle().getIdvValue());
+            dto.setRegistrationNumber(insurance.getVehicle().getRegistrationNumber());
+
+            listOfInsurance.add(dto);
+        }
+
+        return ResponseEntity.ok(listOfInsurance);
     }
 }
