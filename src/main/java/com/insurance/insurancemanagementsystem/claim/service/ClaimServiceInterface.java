@@ -3,6 +3,8 @@ package com.insurance.insurancemanagementsystem.claim.service;
 import com.insurance.insurancemanagementsystem.claim.dto.ClaimResponseDTO;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface ClaimServiceInterface {
-    ResponseEntity<ClaimResponseDTO> viewClaimCustomer(Long userId);
+     ResponseEntity<List<ClaimResponseDTO>> viewClaimCustomer(Long customer_Id);
 }

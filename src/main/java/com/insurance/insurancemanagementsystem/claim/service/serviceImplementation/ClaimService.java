@@ -11,23 +11,27 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ClaimService implements ClaimServiceInterface {
     private InsuranceRepository insuranceRepository;
-    private CustomerRepository customerRepository;
+
 
     @Override
-    public ResponseEntity<ClaimResponseDTO> viewClaimCustomer(Long userId) {
+    public ResponseEntity<List<ClaimResponseDTO>> viewClaimCustomer(Long customer_Id) {
         ClaimResponseDTO dto = new ClaimResponseDTO();
-        Insurance insurance = insuranceRepository.findByCustomer_Id(userId);
+        List<Insurance> insurance1 = insuranceRepository.findByCustomerCustomerId(customer_Id);
+        for(Insurance insurance:insurance1 ){
         dto.setId(insurance.getId());
         dto.setName(insurance.getVehicle().getCarDetails().getModel().getName());
         dto.setPolicyStatus(insurance.getPolicy().getPolicyStatus());
         dto.setIdvValue(insurance.getVehicle().getIdvValue());
         dto.setRegistrationNumber(insurance.getVehicle().getRegistrationNumber());
+}
 
-
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(Collections.singletonList(dto));
     }
 }

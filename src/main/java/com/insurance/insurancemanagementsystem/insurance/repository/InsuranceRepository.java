@@ -7,9 +7,11 @@ import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface InsuranceRepository extends JpaRepository<Insurance, Long> {
-    Insurance findByCustomer_Id(Long customerId);
+    List<Insurance> findByCustomerCustomerId(Long customerId);
 
 
 
