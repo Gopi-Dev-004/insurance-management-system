@@ -33,6 +33,7 @@ public class ClaimService implements ClaimServiceInterface {
             ClaimResponseDTO dto = new ClaimResponseDTO();
             dto.setId(insurance.getId());
             dto.setName(insurance.getVehicle().getCarDetails().getModel().getName());
+            dto.setPolicyType(insurance.getPolicy().getPolicyType());
             dto.setPolicyStatus(insurance.getPolicy().getPolicyStatus());
             dto.setIdvValue(insurance.getVehicle().getIdvValue());
             dto.setRegistrationNumber(insurance.getVehicle().getRegistrationNumber());
