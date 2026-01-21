@@ -2,10 +2,18 @@ package com.insurance.insurancemanagementsystem.claim.entity;
 
 import com.insurance.insurancemanagementsystem.common.enums.MediaType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "claim_media")
 public class ClaimMedia {
 
