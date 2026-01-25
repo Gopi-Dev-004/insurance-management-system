@@ -41,12 +41,12 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class ClaimService implements ClaimServiceInterface {
+
     private final InsuranceRepository insuranceRepository;
     private final EmployeeRepository employeeRepository;
     private final ClaimRepository claimRepository;
     private final MediaRepository mediaRepository;
     private final ClaimAssignmentHistoryRepository historyRepository;
-
 
     @Override
     public ResponseEntity<List<ClaimResponseDTO>> viewClaimCustomer(Long customer_Id) {
@@ -74,40 +74,39 @@ public class ClaimService implements ClaimServiceInterface {
     @Transactional
     public ResponseEntity<String> createClaim(ClaimRequestDTO dto) throws IOException {
 
-
         Claim claim = new Claim();
 
-
-
         claim.setClaimType(dto.getClaimType());
-        claim.setInsurance(insuranceRepository.findById(dto.getInsurance_id()).orElseThrow(()-> new ResourceNotFoundException("Insurance not found...!")));
+        claim.setInsurance(insuranceRepository.findById(dto.getInsurance_id()).orElseThrow(() -> new ResourceNotFoundException("Insurance not found...!")));
         claim.setAccidentDateTime(dto.getDateTime());
         claim.setAccidentLocation(dto.getLocation());
         claim.setDescription(dto.getDescription());
 
-
         claim.setClaimStatus(ClaimStatus.SUBMITTED);
         claim.setCreatedAt(LocalDateTime.now());
-        ClaimType claimSpecialization = dto.getClaimType();
+
+//        ClaimType claimSpecialization = LoginDto.getClaimType();
         ClaimSpecialization specialization =
                 ClaimSpecialization.valueOf(dto.getClaimType().name());
 //        claim.setAssignedEmployee(employeeRepository.findBySpecialization(specialization).stream().findAny().orElseThrow(()-> new ResourceNotFoundException("Employee not exist...!")));
-       claimRepository.save(claim);
+
+        claimRepository.save(claim);
 
         // set multimedia file
-        saveFiles(dto.getFiles(),claim);
+        saveFiles(dto.getFiles(), claim);
 
-       // store claim history
+        // store claim history
         ClaimAssignmentHistory history = new ClaimAssignmentHistory();
+
         history.setClaim(claim);
         history.setEmployee(claim.getAssignedEmployee());
         history.setAssignedAt(LocalDateTime.now());
         historyRepository.save(history);
 
-        return ResponseEntity.ok( "Claim submitted successfully ");
+        return ResponseEntity.ok("Claim submitted successfully ");
     }
 
-    private void saveFiles(MultipartFile[] files,Claim claim) throws IOException {
+    private void saveFiles(MultipartFile[] files, Claim claim) throws IOException {
 //
 //        List<String> urls = new ArrayList<>();
 
@@ -130,29 +129,29 @@ public class ClaimService implements ClaimServiceInterface {
 
     }
 
-        public  String store(MultipartFile file, Long claimId, MediaType type)
-                throws IOException {
+    public String store(MultipartFile file, Long claimId, MediaType type)
+            throws IOException {
 
-            String fileName =
-                    UUID.randomUUID() + "_" + file.getOriginalFilename();
+        String fileName =
+                UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-            Path folder = Paths.get(
-                    "uploads/claims/" + claimId + "/" + type.name().toLowerCase()
-            );
+        Path folder = Paths.get(
+                "uploads/claims/" + claimId + "/" + type.name().toLowerCase()
+        );
 
-            Files.createDirectories(folder);
+        Files.createDirectories(folder);
 
-            Path filePath = folder.resolve(fileName);
-            Files.copy(
-                    file.getInputStream(),
-                    filePath,
-                    StandardCopyOption.REPLACE_EXISTING
-            );
+        Path filePath = folder.resolve(fileName);
+        Files.copy(
+                file.getInputStream(),
+                filePath,
+                StandardCopyOption.REPLACE_EXISTING
+        );
 
-            return "http://localhost:8080/uploads/claims/"
-                    + claimId + "/" + type.name().toLowerCase()
-                    + "/" + fileName;
-        }
+        return "http://localhost:8080/uploads/claims/"
+                + claimId + "/" + type.name().toLowerCase()
+                + "/" + fileName;
+    }
 
     private MediaType detectMediaType(MultipartFile file) {
 
@@ -172,7 +171,5 @@ public class ClaimService implements ClaimServiceInterface {
 
         throw new IllegalArgumentException("Only photo and video allowed");
     }
-
-
 
 }

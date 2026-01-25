@@ -32,13 +32,13 @@ public class EmailService {
 
                         "<h3>Vehicle Information</h3>" +
                         "<p><b>Vehicle Number:</b> " + insurance.getVehicle().getRegistrationNumber()+ "</p>" +
-                        "<p><b>Model:</b> " + insurance.getVehicle().getCarDetails().getModel().getBodyType() + "</p>" +
+                        "<p><b>Model:</b> " + insurance.getVehicle().getCarDetails().getModel().getName() + "</p>" +
 
                         "<h3>Policy Information</h3>" +
                         "<p><b>Policy Name:</b> " + insurance.getPolicy().getPolicyType() + "</p>" +
                         "<p><b>Policy Start Date:</b> " + insurance.getPolicyStartDate() + "</p>" +
                         "<p><b>Policy End Date:</b> " + insurance.getPolicyEndDate() + "</p>" +
-                        "<p><b>Policy Total Amound:</b> " + insurance.getPolicy().getBasePremium() + "</p>" +
+                        "<p><b>Policy Total Amount:</b> " + insurance.getPolicy().getBasePremium() + "</p>" +
 
                         "<h3>Payment Information</h3>" +
                         "<p><b>Amount Paid:</b> ₹" + insurance.getPayment().getAmountPaid() + "</p>" +
