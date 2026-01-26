@@ -76,7 +76,7 @@ public class ClaimService implements ClaimServiceInterface {
     public ResponseEntity<String> createClaim(ClaimRequestDTO dto) throws IOException {
 
 
-        Claim claim = new Claim();
+        Claim  claim = new Claim();
 
 
 

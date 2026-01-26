@@ -50,7 +50,7 @@ public class PolicyService implements PolicyServiceInterface {
 
 
     @Override
-    public ThirdPartyQuoteResponseDTO getPayableAmount(Long customerId,PolicyPremiumCalculationResponseDTO dto) {
+    public ThirdPartyQuoteResponseDTO getPayableAmount(Long customerId, PolicyPremiumCalculationResponseDTO dto) {
 
         // for THIRD_PARTY policy
 
@@ -67,8 +67,7 @@ public class PolicyService implements PolicyServiceInterface {
         PolicyPricing policyPricing = policyPricingRep.findByPolicyType(dto.getPolicyType());
         BigDecimal finalPayableAmount = BigDecimal.ZERO;
 
-        if (dto.getPolicyType() == PolicyType.THIRD_PARTY)
-        {
+        if (dto.getPolicyType() == PolicyType.THIRD_PARTY) {
 
             BigDecimal yearlyPremium = policyPricing.getBasePremium();
 
@@ -78,14 +77,14 @@ public class PolicyService implements PolicyServiceInterface {
                             yearlyPremium
                     );
 
-         Policy policy = createPolicy(dto,policyPricing.getBasePremium(),finalPayableAmount,dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3,BigDecimal.ZERO);
+            Policy policy = createPolicy(dto, policyPricing.getBasePremium(), finalPayableAmount, dto.getPolicyDuration() == PolicyDuration.ONE_YEAR ? 1 : 3, BigDecimal.ZERO);
 
             ThirdPartyQuoteResponseDTO responseDTO = new ThirdPartyQuoteResponseDTO();
             responseDTO.setPolicyId(policy.getId());
             responseDTO.setBasePremium(finalPayableAmount);
             responseDTO.setTotalPremiumAmount(finalPayableAmount);
             responseDTO.setPolicyType(dto.getPolicyType());
-            responseDTO.setPolicyDurationInYears(dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3);
+            responseDTO.setPolicyDurationInYears(dto.getPolicyDuration() == PolicyDuration.ONE_YEAR ? 1 : 3);
             responseDTO.setCoverageStartDate(policy.getStartDate());
             responseDTO.setCoverageEndDate(policy.getEndDate());
 
@@ -102,7 +101,7 @@ public class PolicyService implements PolicyServiceInterface {
                 )
         );
 
-      //   find idv value
+        //   find idv value
 
         BigDecimal idv = carDetails
                 .getIdvValue().subtract(carDetails
@@ -114,24 +113,19 @@ public class PolicyService implements PolicyServiceInterface {
         // addon
         BigDecimal addonPrice = BigDecimal.ZERO;
 
-        if (dto.getPolicyType() == PolicyType.COMPREHENSIVE)
-        {
+        if (dto.getPolicyType() == PolicyType.COMPREHENSIVE) {
             addonPrice = addonPricingRep.findByActiveTrue()
                     .stream()
                     .map(AddonPricing::getPrice)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-        }
-        else if (dto.getPolicyType() == PolicyType.OWN_DAMAGE && dto.getAddonTypes()
-                != null && !dto.getAddonTypes().isEmpty())
-        {
+        } else if (dto.getPolicyType() == PolicyType.OWN_DAMAGE && dto.getAddonTypes()
+                != null && !dto.getAddonTypes().isEmpty()) {
 
             addonPrice = dto.getAddonTypes().stream()
                     .map(type -> addonPricingRep.findByAddonType(type))
                     .map(AddonPricing::getPrice)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-        }
-        else
-        {
+        } else {
             throw new IllegalArgumentException("Invalid policy type");
         }
 
@@ -140,32 +134,32 @@ public class PolicyService implements PolicyServiceInterface {
                 policyPricing.getBasePremium().add(addonPrice)
         );
 
-      Policy policy = createPolicy(dto,policyPricing.getBasePremium(),finalPayableAmount,dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3,idv);
-       Long id= policy.getId();
+        Policy policy = createPolicy(dto, policyPricing.getBasePremium(), finalPayableAmount, dto.getPolicyDuration() == PolicyDuration.ONE_YEAR ? 1 : 3, idv);
+        Long id = policy.getId();
         ThirdPartyQuoteResponseDTO responseDTO = new ThirdPartyQuoteResponseDTO();
         responseDTO.setPolicyId(policy.getId());
         responseDTO.setBasePremium(policyPricing.getBasePremium());
         responseDTO.setTotalPremiumAmount(finalPayableAmount);
         responseDTO.setPolicyType(dto.getPolicyType());
-        responseDTO.setPolicyDurationInYears(dto.getPolicyDuration()==PolicyDuration.ONE_YEAR?1:3);
+        responseDTO.setPolicyDurationInYears(dto.getPolicyDuration() == PolicyDuration.ONE_YEAR ? 1 : 3);
         responseDTO.setCoverageStartDate(policy.getStartDate());
         responseDTO.setCoverageEndDate(policy.getEndDate());
         return responseDTO;
     }
 
 
-    public Policy createPolicy(PolicyPremiumCalculationResponseDTO dto,BigDecimal basePremium, BigDecimal totalPremium,int yearOfPolicy,BigDecimal idv) {
+    public Policy createPolicy(PolicyPremiumCalculationResponseDTO dto, BigDecimal basePremium, BigDecimal totalPremium, int yearOfPolicy, BigDecimal idv) {
         Policy policy = new Policy();
 
         //create Vehicle
 
         CarDetails carDetails = carDetailsRep.findById(dto.getCarId())
                 .orElseThrow(() -> new ResourceNotFoundException("Car not found...!"));
-        String carRegisterNumber =  dto.getRegistrationNumber();
+        String carRegisterNumber = dto.getRegistrationNumber();
         LocalDate vehicleRegistrationDate = dto.getVehicleRegistrationDate();
-        int carAge =  PolicyUtil.calculateCarAge(dto.getVehicleRegistrationDate());
+        int carAge = PolicyUtil.calculateCarAge(dto.getVehicleRegistrationDate());
 
-        Vehicle vehicle = carCRUDService.saveVehicle(carDetails,carRegisterNumber,vehicleRegistrationDate,carAge,idv);
+        Vehicle vehicle = carCRUDService.saveVehicle(carDetails, carRegisterNumber, vehicleRegistrationDate, carAge, idv);
 
         policy.setPolicyNumber(generatePolicyNumber());
 
@@ -185,30 +179,30 @@ public class PolicyService implements PolicyServiceInterface {
 
         Policy newPolicy = policyRepository.save(policy);
 
-        savePolicyAddon(newPolicy,dto);
+        savePolicyAddon(newPolicy, dto);
 
         return newPolicy;
 
     }
 
-    private void savePolicyAddon(Policy newPolicy,PolicyPremiumCalculationResponseDTO dto) {
+    private void savePolicyAddon(Policy newPolicy, PolicyPremiumCalculationResponseDTO dto) {
 
-        if(dto.getAddonTypes() != null && !dto.getAddonTypes().isEmpty()){
+        if (dto.getAddonTypes() != null && !dto.getAddonTypes().isEmpty()) {
 
-             for(AddonType type : dto.getAddonTypes() ){
-                 Addon addon = new Addon();
+            for (AddonType type : dto.getAddonTypes()) {
+                Addon addon = new Addon();
 
-                 addon.setAddonType(type);
-                 addon.setActive(true);
+                addon.setAddonType(type);
+                addon.setActive(true);
 
-                 PolicyAddon policyAddon = new PolicyAddon();
+                PolicyAddon policyAddon = new PolicyAddon();
 
-                 policyAddon.setAddon(addon);
-                 policyAddon.setPolicy(newPolicy);
-                 policyAddon.setAddonDuration(dto.getPolicyDuration());
-                 policyAddon.setAddonPremium(addonPricingRep.findByAddonType(type).getPrice());
+                policyAddon.setAddon(addon);
+                policyAddon.setPolicy(newPolicy);
+                policyAddon.setAddonDuration(dto.getPolicyDuration());
+                policyAddon.setAddonPremium(addonPricingRep.findByAddonType(type).getPrice());
 
-             }
+            }
         }
     }
 

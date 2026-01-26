@@ -53,6 +53,7 @@ public class EmailService {
 
         helper.setText(htmlContent, true);
 
+
         mailSender.send(message);
     }
 
