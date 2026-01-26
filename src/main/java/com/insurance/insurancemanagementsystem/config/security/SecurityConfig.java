@@ -38,8 +38,10 @@ public class SecurityConfig {
                         auth -> auth
                                 .requestMatchers("/auth/login").permitAll()
                                 .requestMatchers("/auth/register").permitAll()
-                                    .requestMatchers("/car/**").authenticated()
-                                .anyRequest().authenticated()
+                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/car/get/**").permitAll()
+                                .requestMatchers("/car/**").authenticated()
+                                .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
