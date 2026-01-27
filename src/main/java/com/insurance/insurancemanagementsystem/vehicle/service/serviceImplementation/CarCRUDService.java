@@ -117,7 +117,6 @@ public class CarCRUDService implements CarCRUDServiceInterface {
 
         CarModel carModel = carModelRep.findById(modelId).orElseThrow(() -> new ResourceNotFoundException("Car model not foud..."));
 
-
         Pageable pageable = PageRequest.of(pageNumber, 5);
 
         Page<CarDetails> carDetails1 = carDetailsRep.getCarDetails(carModel, pageable);

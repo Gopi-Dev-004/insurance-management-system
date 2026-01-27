@@ -2,6 +2,8 @@ package com.insurance.insurancemanagementsystem.claim.service.serviceImplementat
 
 import com.insurance.insurancemanagementsystem.claim.dto.ClaimRequestDTO;
 import com.insurance.insurancemanagementsystem.claim.dto.ClaimResponseDTO;
+import com.insurance.insurancemanagementsystem.claim.dto.GetClaimRequestDTO;
+import com.insurance.insurancemanagementsystem.claim.dto.GetClaimResponseDTO;
 import com.insurance.insurancemanagementsystem.claim.entity.Claim;
 import com.insurance.insurancemanagementsystem.claim.entity.ClaimAssignmentHistory;
 import com.insurance.insurancemanagementsystem.claim.entity.ClaimMedia;
@@ -21,6 +23,9 @@ import com.insurance.insurancemanagementsystem.insurance.entity.Insurance;
 import com.insurance.insurancemanagementsystem.insurance.repository.InsuranceRepository;
 import lombok.AllArgsConstructor;
 import org.jspecify.annotations.Nullable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -170,6 +175,33 @@ public class ClaimService implements ClaimServiceInterface {
         }
 
         throw new IllegalArgumentException("Only photo and video allowed");
+    }
+
+    @Override
+    public Page<GetClaimResponseDTO> getClaimByTypeAndStatus(GetClaimRequestDTO dto,int pageNumber) {
+
+        Pageable pageable = PageRequest.of(pageNumber, 5);
+
+     Page<Claim> claims = claimRepository.findAllByClaimTypeAndClaimStatus(dto.getClaimType(),dto.getClaimStatus(),pageable);
+
+    return claims.map(this::claimMap);
+
+    }
+
+    private GetClaimResponseDTO claimMap(Claim claim){
+
+        GetClaimResponseDTO dto = new GetClaimResponseDTO();
+
+        dto.setInsuranceId(claim.getId());
+        dto.setAccidentDateTime(claim.getAccidentDateTime());
+        dto.setAccidentLocation(claim.getAccidentLocation());
+        dto.setDescription(claim.getDescription());
+        dto.setClaimStatus(claim.getClaimStatus());
+        dto.setClaimAmount(claim.getClaimedAmount());
+        dto.setSubmittedAt(claim.getCreatedAt());
+
+        return dto;
+
     }
 
 }

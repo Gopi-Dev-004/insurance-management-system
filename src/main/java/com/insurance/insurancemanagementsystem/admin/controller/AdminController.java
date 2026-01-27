@@ -29,7 +29,6 @@ public class AdminController {
 
     @PostMapping("/signInEmployee")
     public ResponseEntity<String> AddEmployee(@RequestParam ClaimSpecialization specialization, @Valid @RequestBody EmployeeRequestDTO employeeRequestDTO) {
-
         return adminServiceInterface.AddEmployee(specialization, employeeRequestDTO);
     }
 

@@ -2,9 +2,12 @@ package com.insurance.insurancemanagementsystem.claim.controller;
 
 import com.insurance.insurancemanagementsystem.claim.dto.ClaimRequestDTO;
 import com.insurance.insurancemanagementsystem.claim.dto.ClaimResponseDTO;
+import com.insurance.insurancemanagementsystem.claim.dto.GetClaimRequestDTO;
+import com.insurance.insurancemanagementsystem.claim.dto.GetClaimResponseDTO;
 import com.insurance.insurancemanagementsystem.claim.service.ClaimServiceInterface;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,5 +30,14 @@ public class ClaimController {
 
         return claimServiceInterface.createClaim(dto);
     }
+
+    @GetMapping("/getClaimRquirdType/{pageNumber}")
+    public ResponseEntity<Page<GetClaimResponseDTO>> getClaimByTypeAndStatus(@RequestBody GetClaimRequestDTO dto, @PathVariable int pageNumber){
+
+          return ResponseEntity.ok(  claimServiceInterface.getClaimByTypeAndStatus(dto,pageNumber));
+//
+
+    }
+
 
 }
