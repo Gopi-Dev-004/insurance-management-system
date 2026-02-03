@@ -165,9 +165,11 @@ Make sure the following software is installed on your system:
 
 ```bash
 java -version
-mvn -version
-
 ```
+```bash
+mvn -version
+```
+
 
 #### 1️⃣ Clone the Repository
 
