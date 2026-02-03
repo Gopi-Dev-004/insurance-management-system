@@ -1,64 +1,138 @@
-# 🛡️ Insurance Claim Management System (Spring Boot)
+# 🛡️ Insurance Management System (Spring Boot)
 
-A backend application to manage insurance claims efficiently with secure role-based access using JWT authentication.
+A comprehensive backend **Insurance Management System** developed using **Spring Boot**, designed to handle insurance policies, vehicles, customers, employees, claims, payments, and addons with **JWT-based authentication** and **role-based authorization**.
+
+This project follows **real-world backend architecture** and enterprise-level coding practices.
 
 ---
 
 ## 🚀 Features
-- User registration & login with JWT authentication
-- Role-based access control (Customer, Employee, Admin)
-- Insurance policy creation and management
-- Claim request submission with file uploads (photos/videos)
-- Automatic employee assignment based on claim specialization
-- Secure REST APIs with Spring Security
-- Exception handling and validation
+
+- JWT-based authentication and authorization
+- Role-based access control (Admin, Customer, Employee)
+- Customer registration and KYC management
+- Vehicle, manufacturer, and car model management
+- Insurance policy creation with addons and pricing
+- Claim submission and claim processing workflow
+- Payment and policy pricing handling
+- Email notification support
+- Secure file upload configuration
+- Global exception handling and validations
+- Clean layered architecture (Controller, Service, Repository)
+
+---
+
+## 👥 User Roles
+
+| Role | Responsibilities |
+|-----|------------------|
+| Admin | Manage policies, addons, pricing, and employees |
+| Customer | Register, manage profile, purchase policies, raise claims |
+| Employee | Process and verify assigned insurance claims |
 
 ---
 
 ## 🛠️ Tech Stack
-- Java 17
+
+- Java
 - Spring Boot
-- Spring Security + JWT
+- Spring Security (JWT)
 - JPA / Hibernate
 - MySQL
 - Maven
+- Lombok
 - Postman (API Testing)
 
 ---
 
-## 🧩 System Roles
-| Role | Responsibilities |
-|-----|------------------|
-| Customer | Register, login, submit insurance claims |
-| Employee | Process and verify assigned claims |
-| Admin | Manage employees, policies, and system configuration |
+## 🔐 Security Implementation
 
----
-
-## 🔐 Authentication Flow
-1. User logs in using credentials
-2. JWT token is generated and returned
-3. Token is sent in `Authorization` header for every request
-4. Spring Security validates token and role access
+- JWT token generation on successful login
+- Custom JWT filter for request validation
+- Role-based endpoint authorization
+- Password encryption
+- Secure access using Spring Security configuration
 
 ---
 
 ## 📂 Project Structure
+
 ```text
-src/main/java
- ├── controller
- ├── service
- ├── repository
- ├── entity
- ├── dto
- ├── security
-
-## 📸 File Upload Support
-
-Supports multiple file uploads (images/videos)
-
-Files stored securely on server
-
-Media type validation implemented
- ├── exception
- └── config
+com.insurance.insurancemanagementsystem
+│
+├── admin
+│   ├── controller
+│   ├── dto
+│   ├── entity
+│   ├── repository
+│   └── service
+│
+├── auth
+│   ├── controller
+│   ├── dto
+│   └── service
+│
+├── claim
+│   ├── controller
+│   ├── dto
+│   ├── entity
+│   ├── repository
+│   └── service
+│
+├── customer
+│   ├── controller
+│   ├── dto
+│   ├── entity
+│   ├── repository
+│   └── service
+│
+├── employee
+│   ├── controller
+│   ├── dto
+│   ├── entity
+│   ├── repository
+│   └── service
+│
+├── insurance
+│   ├── controller
+│   ├── dto
+│   ├── entity
+│   ├── repository
+│   └── service
+│
+├── policy
+│   ├── controller
+│   ├── dto
+│   ├── entity
+│   ├── repository
+│   └── service
+│
+├── vehicle
+│   ├── controller
+│   ├── dto
+│   ├── entity
+│   ├── repository
+│   └── service
+│
+├── payment
+│   ├── entity
+│   └── repository
+│
+├── email
+│   ├── controller
+│   └── service
+│
+├── common
+│   ├── enums
+│   ├── exception
+│   └── util
+│
+├── config
+│   ├── security
+│   │   ├── JwtFilter
+│   │   ├── JwtUtil
+│   │   ├── CustomUserDetailsService
+│   │   └── SecurityConfig
+│   └── FileConfig
+│
+└── InsuranceManagementSystemApplication
