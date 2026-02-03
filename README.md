@@ -173,64 +173,63 @@ mvn -version
 
 ```bash
 git clone https://github.com/your-username/insurance-management-system.git
+```
+```bash
 cd insurance-management-system
-
 ```
 
 #### 2️⃣ Create MySQL Database
 
-```bash
-Login to MySQL and create the database:
+- Login to MySQL and create the database:
 
-CREATE DATABASE insurance_db;
+- CREATE DATABASE insurance_db;
 
-```
+
 
 #### 3️⃣ Configure Application Properties
 
-```bash
-Open:
 
-src/main/resources/application.properties
-Update the following values:
+##### Open:
 
-spring.datasource.url=jdbc:mysql://localhost:3306/insurance_db
-spring.datasource.username=root
-spring.datasource.password=yourpassword
+- src/main/resources/application.properties
+- Update the following values:
 
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
+- spring.datasource.url=jdbc:mysql://localhost:3306/insurance_db
+- spring.datasource.username=root
+- spring.datasource.password=yourpassword
 
-server.port=8080
+- spring.jpa.hibernate.ddl-auto=update
+- spring.jpa.show-sql=true
 
-```
+- server.port=8080
+
 
 ##### 📌 Tables will be created automatically when the application starts.
 
 #### 4️⃣ Build the Project
 
-Run the following command from the project root:
+##### Run the following command from the project root:
 
-mvn clean install
-If build is successful, you are ready to run the application.
+- mvn clean install
+- If build is successful, you are ready to run the application.
 
 #### 5️⃣ Run the Application
-Option 1: Using Maven
-mvn spring-boot:run
-Option 2: Using IDE
-Open the main class:
+##### Option 1: Using Maven
+- mvn spring-boot:run
+##### Option 2: Using IDE
+- Open the main class:
 
-InsuranceManagementSystemApplication.java
-Right-click → Run
+- InsuranceManagementSystemApplication.java
+- Right-click → Run
 
 #### 6️⃣ Verify Application is Running
-Once started successfully, you should see logs like:
+- Once started successfully, you should see logs like:
 
-Tomcat started on port(s): 8080
-Started InsuranceManagementSystemApplication
-Base URL:
+- Tomcat started on port(s): 8080
+- Started InsuranceManagementSystemApplication
+- Base URL:
 
-http://localhost:8080
+##### http://localhost:8080
 
 ---
 
