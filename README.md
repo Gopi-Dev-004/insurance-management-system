@@ -155,12 +155,13 @@ Make sure the following software is installed on your system:
 - Postman (for API testing)
 
 Check versions:
-```bash
+
 java -version
 mvn -version
 1️⃣ Clone the Repository
 git clone https://github.com/your-username/insurance-management-system.git
 cd insurance-management-system
+
 2️⃣ Create MySQL Database
 Login to MySQL and create the database:
 
