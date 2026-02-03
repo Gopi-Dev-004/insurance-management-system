@@ -58,6 +58,8 @@ This project follows **real-world backend architecture** and enterprise-level co
 
 ## 📂 Project Structure
 
+```text
+
 com.insurance.insurancemanagementsystem
 │
 ├── admin
@@ -136,6 +138,8 @@ com.insurance.insurancemanagementsystem
 │   └── FileConfig
 │
 └── InsuranceManagementSystemApplication
+
+```
 
 ---
 
@@ -231,4 +235,7 @@ After running the application, open the following URL in your browser:
 
 ```text
 http://localhost:8080/swagger-ui/index.html
+
+```
+
 
