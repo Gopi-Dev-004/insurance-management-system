@@ -40,6 +40,7 @@ This project follows **real-world backend architecture** and enterprise-level co
 - JPA / Hibernate
 - MySQL
 - Maven
+- Swagger (API Documentation) 
 - Lombok
 - Postman (API Testing)
 
@@ -205,3 +206,23 @@ Started InsuranceManagementSystemApplication
 Base URL:
 
 http://localhost:8080
+
+## 📘 Swagger API Documentation
+
+This project uses **Swagger UI** to provide interactive API documentation for all REST endpoints.
+
+Swagger helps developers and testers to:
+- Explore all available APIs
+- View request/response structures
+- Test APIs directly from the browser
+- Understand request DTOs and response schemas
+
+---
+
+## ▶️ Access Swagger UI
+
+After running the application, open the following URL in your browser:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+
