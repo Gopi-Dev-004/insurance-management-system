@@ -58,7 +58,6 @@ This project follows **real-world backend architecture** and enterprise-level co
 
 ## 📂 Project Structure
 
-```text
 com.insurance.insurancemanagementsystem
 │
 ├── admin
