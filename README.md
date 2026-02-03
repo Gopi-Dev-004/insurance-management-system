@@ -6,21 +6,58 @@ This project follows **real-world backend architecture** and enterprise-level co
 
 ---
 
-## 🚀 Features
+## ⚙️ Feature Implementation
 
-- JWT-based authentication and authorization
-- Role-based access control (Admin, Customer, Employee)
-- Customer registration and KYC management
-- Vehicle, manufacturer, and car model management
-- Insurance policy creation with addons and pricing
-- Claim submission and claim processing workflow
-- Payment and policy pricing handling
-- Email notification support
-- Secure file upload configuration
-- Global exception handling and validations
-- Clean layered architecture (Controller, Service, Repository)
+### 🔐 Authentication & Authorization
+- Implemented **JWT-based authentication** using Spring Security.
+- Generated JWT tokens on successful login and validated them for every secured request.
+- Applied **role-based authorization** (Admin, Customer, Employee) at API level.
 
 ---
+
+### 👤 User Management
+- Customer registration with validation and secure password storage.
+- Employee and Admin roles managed with restricted access.
+- Role-specific API access enforced using Spring Security.
+
+---
+
+### 🚗 Vehicle & Insurance Management
+- Implemented CRUD operations for vehicles, manufacturers, and car models.
+- Created insurance policies with addons and pricing configuration.
+- Used DTOs to separate request/response models from entities.
+
+---
+
+### 📄 Policy & Payment Processing
+- Enabled customers to purchase insurance policies.
+- Implemented premium calculation and policy payment flow.
+- Stored payment details securely in the database.
+
+---
+
+### 📝 Claim Management
+- Customers can raise insurance claims with required details.
+- Claims are processed and verified by assigned employees.
+- Implemented claim status tracking and pagination support.
+
+---
+
+### 📘 API Documentation (Swagger)
+- Integrated **Swagger (OpenAPI)** for interactive API documentation.
+- Documented all controllers, request bodies, and response schemas.
+- Enabled easy API testing directly from Swagger UI.
+
+---
+
+### 🧱 Architecture & Code Quality
+- Followed **layered architecture** (Controller, Service, Repository).
+- Implemented **global exception handling** for consistent error responses.
+- Used JPA/Hibernate for database interactions with MySQL.
+- Applied validations to ensure data integrity.
+
+---
+
 
 ## 👥 User Roles
 
