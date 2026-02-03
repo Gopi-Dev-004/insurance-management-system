@@ -138,6 +138,8 @@ com.insurance.insurancemanagementsystem
 │
 └── InsuranceManagementSystemApplication
 
+---
+
 ## ▶️ How to Run the Project (Complete Flow)
 
 This section explains how to set up, run, and test the **Insurance Management System** locally.
@@ -154,6 +156,8 @@ Make sure the following software is installed on your system:
 - Git  
 - IntelliJ IDEA / Eclipse (recommended)  
 - Postman (for API testing)
+
+---
 
 Check versions:
 
@@ -181,6 +185,7 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 
 server.port=8080
+
 📌 Tables will be created automatically when the application starts.
 
 4️⃣ Build the Project
@@ -206,6 +211,8 @@ Started InsuranceManagementSystemApplication
 Base URL:
 
 http://localhost:8080
+
+---
 
 ## 📘 Swagger API Documentation
 
